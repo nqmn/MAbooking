@@ -106,4 +106,30 @@ class BookingsModel extends ListModel
 			'filter_status' => $this->getState('filter.status'),
 		];
 	}
+
+	public function getSummary(): array
+	{
+		$db = $this->getDatabase();
+		$query = $db->getQuery(true)
+			->select(
+				[
+					'COUNT(*) AS total',
+					"SUM(CASE WHEN status = 'confirmed' THEN 1 ELSE 0 END) AS confirmed",
+					"SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending",
+					"SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) AS cancelled",
+				]
+			)
+			->from($db->quoteName('#__mabooking_bookings'))
+			->where('state >= 0');
+
+		$db->setQuery($query);
+		$result = (array) $db->loadAssoc();
+
+		return [
+			'total' => (int) ($result['total'] ?? 0),
+			'confirmed' => (int) ($result['confirmed'] ?? 0),
+			'pending' => (int) ($result['pending'] ?? 0),
+			'cancelled' => (int) ($result['cancelled'] ?? 0),
+		];
+	}
 }

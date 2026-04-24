@@ -23,13 +23,18 @@ class HtmlView extends BaseHtmlView
 
 	public $activeFilters;
 
+	public array $summary = [];
+
 	public function display($tpl = null): void
 	{
+		/** @var \Icc\Component\Mabooking\Administrator\Model\BookingsModel $model */
+		$model = $this->getModel();
 		$this->items = $this->get('Items');
 		$this->pagination = $this->get('Pagination');
 		$this->state = $this->get('State');
 		$this->filterForm = $this->get('FilterForm');
 		$this->activeFilters = $this->get('ActiveFilters');
+		$this->summary = $model->getSummary();
 
 		$this->addToolbar();
 
@@ -39,8 +44,5 @@ class HtmlView extends BaseHtmlView
 	private function addToolbar(): void
 	{
 		ToolbarHelper::title('Bookings', 'address-book');
-		ToolbarHelper::addNew('booking.add');
-		ToolbarHelper::editList('booking.edit');
-		ToolbarHelper::deleteList('', 'bookings.delete');
 	}
 }
