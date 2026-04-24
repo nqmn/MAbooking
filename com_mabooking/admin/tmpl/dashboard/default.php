@@ -19,16 +19,40 @@ $next = (new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month)))->modify(
 $today = (new DateTimeImmutable('today'))->format('Y-m-d');
 $siteRoot = Uri::root();
 
-$bookingCount = count($this->allBookings);
-$upcomingCount = count($this->upcomingBookings);
-$pastCount = count($this->pastBookings);
-
 $roomColors = [
 	'Grand Ballroom' => 'is-blue',
 	'Exhibition Hall' => 'is-red',
 	'Bougainvillea Room' => 'is-green',
 	'Town Hall' => 'is-gold',
 ];
+
+$venueCounts = [];
+
+foreach ($roomColors as $venueTitle => $colorClass)
+{
+	$venueCounts[$venueTitle] = 0;
+}
+
+foreach ($this->monthlyBookings as $entries)
+{
+	foreach ($entries as $booking)
+	{
+		$venueTitle = (string) ($booking->venue_title ?? '');
+
+		if ($venueTitle === '')
+		{
+			continue;
+		}
+
+		if (!isset($venueCounts[$venueTitle]))
+		{
+			$venueCounts[$venueTitle] = 0;
+			$roomColors[$venueTitle] = 'is-slate';
+		}
+
+		$venueCounts[$venueTitle]++;
+	}
+}
 
 $renderStatusBadge = static function (string $status): string {
 	$status = strtolower($status);
@@ -147,10 +171,13 @@ $renderStatusBadge = static function (string $status): string {
 			</div>
 
 			<div class="mabooking-pills">
-				<span class="mabooking-pill mabooking-pill--active">All Events</span>
-				<span class="mabooking-pill mabooking-pill--blue"><i></i>Bookings (<?php echo $bookingCount; ?>)</span>
-				<span class="mabooking-pill mabooking-pill--amber"><i></i>Upcoming Events (<?php echo $upcomingCount; ?>)</span>
-				<span class="mabooking-pill mabooking-pill--green"><i></i>Past Events (<?php echo $pastCount; ?>)</span>
+				<span class="mabooking-pill mabooking-pill--active">All Venues</span>
+				<?php foreach ($venueCounts as $venueTitle => $count) : ?>
+					<span class="mabooking-pill">
+						<i class="<?php echo htmlspecialchars($roomColors[$venueTitle] ?? 'is-slate', ENT_QUOTES, 'UTF-8'); ?>"></i>
+						<?php echo htmlspecialchars($venueTitle, ENT_QUOTES, 'UTF-8'); ?> (<?php echo (int) $count; ?>)
+					</span>
+				<?php endforeach; ?>
 			</div>
 
 			<div class="mabooking-grid-head">
@@ -185,11 +212,11 @@ $renderStatusBadge = static function (string $status): string {
 
 			<div class="mabooking-legend">
 				<div>
-					<p>Legend</p>
+					<p>Venue Legend</p>
 					<div class="mabooking-legend__items">
-						<div><span class="mabooking-calendar-entry__dot is-blue"></span> Bookings</div>
-						<div><span class="mabooking-calendar-entry__dot is-amber"></span> Upcoming Events</div>
-						<div><span class="mabooking-calendar-entry__dot is-green"></span> Past Events</div>
+						<?php foreach ($venueCounts as $venueTitle => $count) : ?>
+							<div><span class="mabooking-calendar-entry__dot <?php echo htmlspecialchars($roomColors[$venueTitle] ?? 'is-slate', ENT_QUOTES, 'UTF-8'); ?>"></span> <?php echo htmlspecialchars($venueTitle, ENT_QUOTES, 'UTF-8'); ?></div>
+						<?php endforeach; ?>
 					</div>
 				</div>
 			</div>
