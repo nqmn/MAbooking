@@ -24,6 +24,7 @@
 		<submenu>
 			<menu link="option=com_mabooking&amp;view=dashboard">COM_MABOOKING_SUBMENU_DASHBOARD</menu>
 			<menu link="option=com_mabooking&amp;view=bookings">COM_MABOOKING_SUBMENU_BOOKINGS</menu>
+			<menu link="option=com_mabooking&amp;view=venues">COM_MABOOKING_SUBMENU_VENUES</menu>
 			<menu link="option=com_mabooking&amp;view=widgets">COM_MABOOKING_SUBMENU_WIDGETS</menu>
 		</submenu>
 

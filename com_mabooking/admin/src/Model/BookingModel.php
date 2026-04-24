@@ -49,6 +49,41 @@ class BookingModel extends AdminModel
 		return (array) $data;
 	}
 
+	public function getVenues(): array
+	{
+		$db = $this->getDatabase();
+		$query = $db->getQuery(true)
+			->select('id, title')
+			->from($db->quoteName('#__mabooking_venues'))
+			->where('state = 1')
+			->order('ordering ASC, title ASC');
+
+		$db->setQuery($query);
+
+		return (array) $db->loadObjectList();
+	}
+
+	public function getSpaces(): array
+	{
+		$db = $this->getDatabase();
+		$query = $db->getQuery(true)
+			->select('id, venue_id, title')
+			->from($db->quoteName('#__mabooking_spaces'))
+			->where('state = 1')
+			->order('venue_id ASC, ordering ASC, title ASC');
+
+		$db->setQuery($query);
+		$rows = (array) $db->loadObjectList();
+		$grouped = [];
+
+		foreach ($rows as $space)
+		{
+			$grouped[(int) $space->venue_id][] = $space;
+		}
+
+		return $grouped;
+	}
+
 	protected function prepareTable($table): void
 	{
 		$table->event_title = trim((string) $table->event_title);

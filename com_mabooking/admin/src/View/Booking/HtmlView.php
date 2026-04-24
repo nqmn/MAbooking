@@ -17,10 +17,18 @@ class HtmlView extends BaseHtmlView
 
 	public $item;
 
+	public array $venues = [];
+
+	public array $spaces = [];
+
 	public function display($tpl = null): void
 	{
+		/** @var \Icc\Component\Mabooking\Administrator\Model\BookingModel $model */
+		$model = $this->getModel();
 		$this->form = $this->get('Form');
 		$this->item = $this->get('Item');
+		$this->venues = $model->getVenues();
+		$this->spaces = $model->getSpaces();
 
 		$this->addToolbar();
 

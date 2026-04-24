@@ -44,7 +44,6 @@ class HtmlView extends BaseHtmlView
 	private function addToolbar(): void
 	{
 		ToolbarHelper::title('MA Booking', 'calendar');
-		ToolbarHelper::addNew('booking.add');
 		ToolbarHelper::preferences('com_mabooking');
 	}
 }

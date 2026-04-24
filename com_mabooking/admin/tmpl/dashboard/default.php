@@ -76,11 +76,6 @@ $renderStatusBadge = static function (string $status): string {
 	</div>
 
 	<section class="mabooking-pane is-active" data-tab-panel="master-calendar" role="tabpanel">
-		<div class="mabooking-section-heading">
-			<h2>Master Calendar</h2>
-			<p>View all bookings, upcoming events, and past events in one centralized calendar.</p>
-		</div>
-
 		<div class="mabooking-card">
 			<div class="mabooking-card__top">
 				<div class="mabooking-card__title">

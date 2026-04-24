@@ -158,6 +158,10 @@ $next = (new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month)))->modify(
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+	var venue = document.getElementById('jform_venue_id');
+	var room = document.getElementById('jform_space_id');
+	var spaceMap = <?php echo json_encode($this->spaces, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+
 	['jform_start_time', 'jform_end_time'].forEach(function (id) {
 		var input = document.getElementById(id);
 
@@ -169,5 +173,41 @@ document.addEventListener('DOMContentLoaded', function () {
 		input.setAttribute('step', '60');
 		input.setAttribute('placeholder', '');
 	});
+
+	if (venue && room) {
+		var spaceToVenue = {};
+
+		Object.keys(spaceMap).forEach(function (venueId) {
+			(spaceMap[venueId] || []).forEach(function (space) {
+				spaceToVenue[String(space.id)] = String(venueId);
+			});
+		});
+
+		var syncRooms = function () {
+			var selectedVenue = venue.value;
+			var selectedRoom = room.value;
+
+			Array.prototype.slice.call(room.options).forEach(function (option) {
+				if (!option.value) {
+					option.hidden = false;
+					return;
+				}
+
+				var visible = !selectedVenue || spaceToVenue[String(option.value)] === String(selectedVenue);
+				option.hidden = !visible;
+
+				if (!visible && option.selected) {
+					room.value = '';
+				}
+			});
+
+			if (selectedRoom && room.value !== selectedRoom) {
+				room.value = '';
+			}
+		};
+
+		venue.addEventListener('change', syncRooms);
+		syncRooms();
+	}
 });
 </script>
