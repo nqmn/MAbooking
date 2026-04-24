@@ -156,3 +156,18 @@ $next = (new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month)))->modify(
 	.iccbooking-hero { flex-direction: column; align-items: flex-start; }
 }
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	['jform_start_time', 'jform_end_time'].forEach(function (id) {
+		var input = document.getElementById(id);
+
+		if (!input) {
+			return;
+		}
+
+		input.setAttribute('type', 'time');
+		input.setAttribute('step', '60');
+		input.setAttribute('placeholder', '');
+	});
+});
+</script>

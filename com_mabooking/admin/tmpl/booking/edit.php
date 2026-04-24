@@ -43,3 +43,18 @@ $articleId = (int) ($this->item->article_id ?? 0);
 	<input type="hidden" name="task" value="">
 	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	['jform_start_time', 'jform_end_time'].forEach(function (id) {
+		var input = document.getElementById(id);
+
+		if (!input) {
+			return;
+		}
+
+		input.setAttribute('type', 'time');
+		input.setAttribute('step', '60');
+		input.setAttribute('placeholder', '');
+	});
+});
+</script>
