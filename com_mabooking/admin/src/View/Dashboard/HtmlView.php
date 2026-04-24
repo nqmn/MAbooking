@@ -17,6 +17,10 @@ class HtmlView extends BaseHtmlView
 
 	public array $upcomingBookings = [];
 
+	public array $allBookings = [];
+
+	public array $pastBookings = [];
+
 	public array $calendar = [];
 
 	public array $monthlyBookings = [];
@@ -27,8 +31,10 @@ class HtmlView extends BaseHtmlView
 		$model = $this->getModel();
 		$this->summary = $model->getSummary();
 		$this->calendar = $model->getCalendarContext();
+		$this->allBookings = $model->getAllBookings();
 		$this->monthlyBookings = $model->getMonthlyBookings($this->calendar['year'], $this->calendar['month']);
 		$this->upcomingBookings = $model->getUpcomingBookings();
+		$this->pastBookings = $model->getPastBookings();
 
 		$this->addToolbar();
 

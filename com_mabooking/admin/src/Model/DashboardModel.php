@@ -13,6 +13,11 @@ use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class DashboardModel extends BaseDatabaseModel
 {
+	public function getAllBookings(int $limit = 100): array
+	{
+		return $this->getBookingsList('', $limit, 'DESC');
+	}
+
 	public function getCalendarContext(): array
 	{
 		$input = Factory::getApplication()->input;
@@ -56,26 +61,16 @@ class DashboardModel extends BaseDatabaseModel
 
 	public function getUpcomingBookings(int $limit = 8): array
 	{
-		$db = $this->getDatabase();
 		$today = (new \DateTimeImmutable('today'))->format('Y-m-d');
-		$query = $db->getQuery(true)
-			->select(
-				[
-					'b.*',
-					'v.title AS venue_title',
-					's.title AS space_title',
-				]
-			)
-			->from($db->quoteName('#__mabooking_bookings', 'b'))
-			->leftJoin($db->quoteName('#__mabooking_venues', 'v') . ' ON v.id = b.venue_id')
-			->leftJoin($db->quoteName('#__mabooking_spaces', 's') . ' ON s.id = b.space_id')
-			->where('b.booking_date >= ' . $db->quote($today))
-			->where('b.state = 1')
-			->order('b.booking_date ASC, b.start_time ASC');
 
-		$db->setQuery($query, 0, $limit);
+		return $this->getBookingsList('b.booking_date >= ' . $this->getDatabase()->quote($today), $limit, 'ASC');
+	}
 
-		return (array) $db->loadObjectList();
+	public function getPastBookings(int $limit = 50): array
+	{
+		$today = (new \DateTimeImmutable('today'))->format('Y-m-d');
+
+		return $this->getBookingsList('b.booking_date < ' . $this->getDatabase()->quote($today), $limit, 'DESC');
 	}
 
 	public function getMonthlyBookings(int $year, int $month): array
@@ -108,5 +103,34 @@ class DashboardModel extends BaseDatabaseModel
 		}
 
 		return $grouped;
+	}
+
+	private function getBookingsList(string $dateWhere = '', int $limit = 0, string $direction = 'DESC'): array
+	{
+		$db = $this->getDatabase();
+		$query = $db->getQuery(true)
+			->select(
+				[
+					'b.*',
+					'v.title AS venue_title',
+					's.title AS space_title',
+				]
+			)
+			->from($db->quoteName('#__mabooking_bookings', 'b'))
+			->leftJoin($db->quoteName('#__mabooking_venues', 'v') . ' ON v.id = b.venue_id')
+			->leftJoin($db->quoteName('#__mabooking_spaces', 's') . ' ON s.id = b.space_id')
+			->where('b.state = 1');
+
+		if ($dateWhere !== '')
+		{
+			$query->where($dateWhere);
+		}
+
+		$orderDirection = strtoupper($direction) === 'ASC' ? 'ASC' : 'DESC';
+		$query->order('b.booking_date ' . $orderDirection . ', b.start_time ' . $orderDirection);
+
+		$db->setQuery($query, 0, $limit > 0 ? $limit : null);
+
+		return (array) $db->loadObjectList();
 	}
 }

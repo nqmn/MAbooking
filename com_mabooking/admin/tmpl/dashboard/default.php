@@ -7,6 +7,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 
 $days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 $month = (int) $this->calendar['month'];
@@ -15,203 +16,417 @@ $daysInMonth = (int) $this->calendar['daysInMonth'];
 $startWeekday = (int) $this->calendar['startWeekday'];
 $prev = (new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month)))->modify('-1 month');
 $next = (new DateTimeImmutable(sprintf('%04d-%02d-01', $year, $month)))->modify('+1 month');
+$today = (new DateTimeImmutable('today'))->format('Y-m-d');
+$siteRoot = Uri::root();
+
+$bookingCount = count($this->allBookings);
+$upcomingCount = count($this->upcomingBookings);
+$pastCount = count($this->pastBookings);
+
+$roomColors = [
+	'Grand Ballroom' => 'is-blue',
+	'Exhibition Hall' => 'is-red',
+	'Bougainvillea Room' => 'is-green',
+	'Town Hall' => 'is-gold',
+];
+
+$renderStatusBadge = static function (string $status): string {
+	$status = strtolower($status);
+	$class = 'is-slate';
+
+	if ($status === 'confirmed')
+	{
+		$class = 'is-green';
+	}
+	elseif ($status === 'pending')
+	{
+		$class = 'is-amber';
+	}
+	elseif ($status === 'cancelled')
+	{
+		$class = 'is-red';
+	}
+
+	return '<span class="mabooking-status ' . $class . '">' . htmlspecialchars(ucfirst($status), ENT_QUOTES, 'UTF-8') . '</span>';
+};
 ?>
-<div class="iccbooking-admin">
-	<div class="iccbooking-admin__header">
+<div class="mabooking-admin">
+	<div class="mabooking-admin__header">
 		<div>
 			<h1>Admin Panel</h1>
-			<p>Master calendar and booking overview styled from the `app.html` admin concept.</p>
+			<p>Manage venue bookings and reservations.</p>
 		</div>
-		<div class="iccbooking-admin__actions">
-			<a class="iccbooking-admin__ghost" href="<?php echo Route::_('index.php?option=com_mabooking&view=bookings'); ?>">Bookings</a>
-			<a class="iccbooking-admin__primary" href="<?php echo Route::_('index.php?option=com_mabooking&task=booking.add'); ?>">New Booking</a>
-		</div>
-	</div>
-
-	<div class="iccbooking-admin__stats">
-		<div class="iccbooking-admin__stat">
-			<span>Total Bookings</span>
-			<strong><?php echo (int) $this->summary['total']; ?></strong>
-		</div>
-		<div class="iccbooking-admin__stat">
-			<span>Confirmed</span>
-			<strong class="is-confirmed"><?php echo (int) $this->summary['confirmed']; ?></strong>
-		</div>
-		<div class="iccbooking-admin__stat">
-			<span>Pending</span>
-			<strong class="is-pending"><?php echo (int) $this->summary['pending']; ?></strong>
-		</div>
-		<div class="iccbooking-admin__stat">
-			<span>Cancelled</span>
-			<strong class="is-cancelled"><?php echo (int) $this->summary['cancelled']; ?></strong>
+		<div class="mabooking-admin__actions">
+			<a class="mabooking-button mabooking-button--ghost" href="<?php echo htmlspecialchars($siteRoot, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">Back to Site</a>
+			<a class="mabooking-button mabooking-button--primary" href="<?php echo Route::_('index.php?option=com_mabooking&task=booking.add'); ?>">New Booking</a>
+			<a class="mabooking-button mabooking-button--ghost" href="<?php echo Route::_('index.php?option=com_mabooking&view=bookings'); ?>">Manage Bookings</a>
 		</div>
 	</div>
 
-	<div class="iccbooking-panel">
-		<div class="iccbooking-panel__top">
-			<div>
-				<h2><?php echo htmlspecialchars($this->calendar['label'], ENT_QUOTES, 'UTF-8'); ?></h2>
-				<p>View all bookings in a single calendar, matching the card-and-pill structure from the mockup.</p>
-			</div>
-			<div class="iccbooking-panel__nav">
-				<a href="<?php echo Route::_('index.php?option=com_mabooking&view=dashboard&month=' . $prev->format('n') . '&year=' . $prev->format('Y')); ?>">&larr;</a>
-				<a href="<?php echo Route::_('index.php?option=com_mabooking&view=dashboard'); ?>">Today</a>
-				<a href="<?php echo Route::_('index.php?option=com_mabooking&view=dashboard&month=' . $next->format('n') . '&year=' . $next->format('Y')); ?>">&rarr;</a>
-			</div>
+	<div class="mabooking-admin__controls">
+		<div class="mabooking-search">
+			<input type="search" id="mabooking-dashboard-search" placeholder="Search bookings..." aria-label="Search bookings">
+		</div>
+		<div class="mabooking-tabs" role="tablist" aria-label="Dashboard sections">
+			<button type="button" class="mabooking-tab is-active" data-tab-target="master-calendar" role="tab" aria-selected="true">Master Calendar</button>
+			<button type="button" class="mabooking-tab" data-tab-target="bookings" role="tab" aria-selected="false">Bookings</button>
+			<button type="button" class="mabooking-tab" data-tab-target="upcoming-events" role="tab" aria-selected="false">Upcoming Events</button>
+			<button type="button" class="mabooking-tab" data-tab-target="past-events" role="tab" aria-selected="false">Past Events</button>
+		</div>
+	</div>
+
+	<section class="mabooking-pane is-active" data-tab-panel="master-calendar" role="tabpanel">
+		<div class="mabooking-section-heading">
+			<h2>Master Calendar</h2>
+			<p>View all bookings, upcoming events, and past events in one centralized calendar.</p>
 		</div>
 
-		<div class="iccbooking-panel__filters">
-			<span class="is-active">All Bookings</span>
-			<span><i class="dot dot--confirmed"></i> Confirmed (<?php echo (int) $this->summary['confirmed']; ?>)</span>
-			<span><i class="dot dot--pending"></i> Pending (<?php echo (int) $this->summary['pending']; ?>)</span>
-			<span><i class="dot dot--cancelled"></i> Cancelled (<?php echo (int) $this->summary['cancelled']; ?>)</span>
-		</div>
+		<div class="mabooking-card">
+			<div class="mabooking-card__top">
+				<div class="mabooking-card__title">
+					<h3><?php echo htmlspecialchars($this->calendar['label'], ENT_QUOTES, 'UTF-8'); ?></h3>
+					<a class="mabooking-inline-button" href="<?php echo Route::_('index.php?option=com_mabooking&view=dashboard'); ?>">Today</a>
+				</div>
+				<div class="mabooking-nav">
+					<a href="<?php echo Route::_('index.php?option=com_mabooking&view=dashboard&month=' . $prev->format('n') . '&year=' . $prev->format('Y')); ?>" aria-label="Previous month">&lsaquo;</a>
+					<a href="<?php echo Route::_('index.php?option=com_mabooking&view=dashboard&month=' . $next->format('n') . '&year=' . $next->format('Y')); ?>" aria-label="Next month">&rsaquo;</a>
+				</div>
+			</div>
 
-		<div class="iccbooking-grid">
-			<?php foreach ($days as $day) : ?>
-				<div class="iccbooking-grid__head"><?php echo $day; ?></div>
-			<?php endforeach; ?>
+			<div class="mabooking-pills">
+				<span class="mabooking-pill mabooking-pill--active">All Events</span>
+				<span class="mabooking-pill mabooking-pill--blue"><i></i>Bookings (<?php echo $bookingCount; ?>)</span>
+				<span class="mabooking-pill mabooking-pill--amber"><i></i>Upcoming Events (<?php echo $upcomingCount; ?>)</span>
+				<span class="mabooking-pill mabooking-pill--green"><i></i>Past Events (<?php echo $pastCount; ?>)</span>
+			</div>
 
-			<?php for ($i = 0; $i < $startWeekday; $i++) : ?>
-				<div class="iccbooking-grid__cell iccbooking-grid__cell--blank"></div>
-			<?php endfor; ?>
+			<div class="mabooking-grid-head">
+				<?php foreach ($days as $day) : ?>
+					<div><?php echo $day; ?></div>
+				<?php endforeach; ?>
+			</div>
 
-			<?php for ($day = 1; $day <= $daysInMonth; $day++) : ?>
-				<?php $date = sprintf('%04d-%02d-%02d', $year, $month, $day); ?>
-				<div class="iccbooking-grid__cell" role="button" tabindex="0"
-					data-booking-date="<?php echo $date; ?>"
-					title="Add booking for <?php echo $date; ?>">
-					<div class="iccbooking-grid__day"><?php echo $day; ?></div>
-					<?php if (!empty($this->monthlyBookings[$date])) : ?>
-						<?php foreach ($this->monthlyBookings[$date] as $booking) : ?>
-							<div class="iccbooking-chip iccbooking-chip--<?php echo htmlspecialchars($booking->status, ENT_QUOTES, 'UTF-8'); ?>">
-								<strong><?php echo htmlspecialchars($booking->space_title, ENT_QUOTES, 'UTF-8'); ?></strong>
-								<span><?php echo htmlspecialchars(substr($booking->start_time, 0, 5), ENT_QUOTES, 'UTF-8'); ?></span>
+			<div class="mabooking-grid">
+				<?php for ($i = 0; $i < $startWeekday; $i++) : ?>
+					<div class="mabooking-grid__cell mabooking-grid__cell--blank"></div>
+				<?php endfor; ?>
+
+				<?php for ($day = 1; $day <= $daysInMonth; $day++) : ?>
+					<?php $date = sprintf('%04d-%02d-%02d', $year, $month, $day); ?>
+					<?php $entries = $this->monthlyBookings[$date] ?? []; ?>
+					<div class="mabooking-grid__cell<?php echo $date === $today ? ' is-today' : ''; ?>" role="button" tabindex="0" data-booking-date="<?php echo $date; ?>">
+						<div class="mabooking-grid__day"><?php echo $day; ?></div>
+						<?php foreach (array_slice($entries, 0, 3) as $booking) : ?>
+							<?php $roomColor = $roomColors[$booking->venue_title] ?? 'is-slate'; ?>
+							<div class="mabooking-calendar-entry">
+								<span class="mabooking-calendar-entry__dot <?php echo $roomColor; ?>"></span>
+								<div>
+									<strong><?php echo htmlspecialchars($booking->space_title, ENT_QUOTES, 'UTF-8'); ?></strong>
+									<span><?php echo htmlspecialchars(substr($booking->start_time, 0, 5), ENT_QUOTES, 'UTF-8'); ?></span>
+								</div>
 							</div>
 						<?php endforeach; ?>
-					<?php else : ?>
-						<div class="iccbooking-chip iccbooking-chip--empty">+ Add booking</div>
-					<?php endif; ?>
+					</div>
+				<?php endfor; ?>
+			</div>
+
+			<div class="mabooking-legend">
+				<div>
+					<p>Legend</p>
+					<div class="mabooking-legend__items">
+						<div><span class="mabooking-calendar-entry__dot is-blue"></span> Bookings</div>
+						<div><span class="mabooking-calendar-entry__dot is-amber"></span> Upcoming Events</div>
+						<div><span class="mabooking-calendar-entry__dot is-green"></span> Past Events</div>
+					</div>
 				</div>
-			<?php endfor; ?>
+			</div>
+		</div>
+	</section>
+
+	<section class="mabooking-pane" data-tab-panel="bookings" role="tabpanel" hidden>
+		<div class="mabooking-stats">
+			<div class="mabooking-stat">
+				<span>Total Bookings</span>
+				<strong><?php echo (int) $this->summary['total']; ?></strong>
+			</div>
+			<div class="mabooking-stat">
+				<span>Confirmed</span>
+				<strong class="is-green-text"><?php echo (int) $this->summary['confirmed']; ?></strong>
+			</div>
+			<div class="mabooking-stat">
+				<span>Pending</span>
+				<strong class="is-amber-text"><?php echo (int) $this->summary['pending']; ?></strong>
+			</div>
+			<div class="mabooking-stat">
+				<span>Cancelled</span>
+				<strong class="is-red-text"><?php echo (int) $this->summary['cancelled']; ?></strong>
+			</div>
 		</div>
 
-		<div class="iccbooking-legend">
-			<div><i class="dot dot--confirmed"></i> Confirmed</div>
-			<div><i class="dot dot--pending"></i> Pending</div>
-			<div><i class="dot dot--cancelled"></i> Cancelled</div>
-			<div><i class="dot dot--empty"></i> Empty</div>
-		</div>
-	</div>
-
-	<div class="iccbooking-table">
-		<div class="iccbooking-table__head">
-			<h3>Upcoming Bookings</h3>
-			<p>Compact list below the calendar for quick action, similar to the mockup’s secondary admin blocks.</p>
-		</div>
-		<div class="table-responsive">
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Date</th>
-						<th>Time</th>
-						<th>Venue</th>
-						<th>Room</th>
-						<th>Client</th>
-						<th>Status</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php if (!$this->upcomingBookings) : ?>
+		<div class="mabooking-card">
+			<div class="mabooking-table-wrap">
+				<table class="mabooking-table">
+					<thead>
 						<tr>
-							<td colspan="6" class="text-center text-muted">No upcoming bookings yet.</td>
+							<th>Date</th>
+							<th>Venue / Room</th>
+							<th>Client</th>
+							<th>Contact</th>
+							<th>Status</th>
+							<th class="is-center">Actions</th>
 						</tr>
-					<?php else : ?>
-						<?php foreach ($this->upcomingBookings as $booking) : ?>
-							<tr>
-								<td><?php echo htmlspecialchars($booking->booking_date, ENT_QUOTES, 'UTF-8'); ?></td>
-								<td><?php echo htmlspecialchars($booking->start_time . ' - ' . $booking->end_time, ENT_QUOTES, 'UTF-8'); ?></td>
-								<td><?php echo htmlspecialchars($booking->venue_title, ENT_QUOTES, 'UTF-8'); ?></td>
-								<td><?php echo htmlspecialchars($booking->space_title, ENT_QUOTES, 'UTF-8'); ?></td>
+					</thead>
+					<tbody>
+						<?php foreach ($this->allBookings as $booking) : ?>
+							<?php $roomColor = $roomColors[$booking->venue_title] ?? 'is-slate'; ?>
+							<tr data-search-row>
+								<td>
+									<div class="mabooking-table__primary"><?php echo htmlspecialchars($booking->booking_date, ENT_QUOTES, 'UTF-8'); ?></div>
+									<div class="mabooking-table__secondary"><?php echo htmlspecialchars(substr($booking->start_time, 0, 5) . ' - ' . substr($booking->end_time, 0, 5), ENT_QUOTES, 'UTF-8'); ?></div>
+								</td>
+								<td>
+									<div class="mabooking-room">
+										<span class="mabooking-calendar-entry__dot <?php echo $roomColor; ?>"></span>
+										<span class="mabooking-table__primary"><?php echo htmlspecialchars($booking->space_title, ENT_QUOTES, 'UTF-8'); ?></span>
+									</div>
+									<div class="mabooking-table__secondary"><?php echo htmlspecialchars($booking->venue_title, ENT_QUOTES, 'UTF-8'); ?></div>
+								</td>
 								<td><?php echo htmlspecialchars($booking->client_name, ENT_QUOTES, 'UTF-8'); ?></td>
-								<td><span class="iccbooking-badge iccbooking-badge--<?php echo htmlspecialchars($booking->status, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars(ucfirst($booking->status), ENT_QUOTES, 'UTF-8'); ?></span></td>
+								<td>
+									<div class="mabooking-table__secondary"><?php echo htmlspecialchars($booking->client_phone, ENT_QUOTES, 'UTF-8'); ?></div>
+									<div class="mabooking-table__secondary"><?php echo htmlspecialchars($booking->client_email, ENT_QUOTES, 'UTF-8'); ?></div>
+								</td>
+								<td><?php echo $renderStatusBadge((string) $booking->status); ?></td>
+								<td class="is-center">
+									<a class="mabooking-row-link" href="<?php echo Route::_('index.php?option=com_mabooking&task=booking.edit&id=' . (int) $booking->id); ?>">Edit</a>
+								</td>
 							</tr>
 						<?php endforeach; ?>
-					<?php endif; ?>
-				</tbody>
-			</table>
+					</tbody>
+				</table>
+			</div>
 		</div>
-	</div>
+	</section>
+
+	<section class="mabooking-pane" data-tab-panel="upcoming-events" role="tabpanel" hidden>
+		<div class="mabooking-section-heading">
+			<h2>Upcoming Events</h2>
+			<p>Bookings from today onward.</p>
+		</div>
+		<div class="mabooking-card">
+			<div class="mabooking-table-wrap">
+				<table class="mabooking-table">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Event</th>
+							<th>Venue / Room</th>
+							<th>Client</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if (!$this->upcomingBookings) : ?>
+							<tr><td colspan="5" class="mabooking-empty">No upcoming events.</td></tr>
+						<?php else : ?>
+							<?php foreach ($this->upcomingBookings as $booking) : ?>
+								<tr data-search-row>
+									<td>
+										<div class="mabooking-table__primary"><?php echo htmlspecialchars($booking->booking_date, ENT_QUOTES, 'UTF-8'); ?></div>
+										<div class="mabooking-table__secondary"><?php echo htmlspecialchars(substr($booking->start_time, 0, 5) . ' - ' . substr($booking->end_time, 0, 5), ENT_QUOTES, 'UTF-8'); ?></div>
+									</td>
+									<td><?php echo htmlspecialchars($booking->event_title, ENT_QUOTES, 'UTF-8'); ?></td>
+									<td>
+										<div class="mabooking-table__primary"><?php echo htmlspecialchars($booking->space_title, ENT_QUOTES, 'UTF-8'); ?></div>
+										<div class="mabooking-table__secondary"><?php echo htmlspecialchars($booking->venue_title, ENT_QUOTES, 'UTF-8'); ?></div>
+									</td>
+									<td><?php echo htmlspecialchars($booking->client_name, ENT_QUOTES, 'UTF-8'); ?></td>
+									<td><?php echo $renderStatusBadge((string) $booking->status); ?></td>
+								</tr>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+
+	<section class="mabooking-pane" data-tab-panel="past-events" role="tabpanel" hidden>
+		<div class="mabooking-section-heading">
+			<h2>Past Events</h2>
+			<p>Bookings that already took place.</p>
+		</div>
+		<div class="mabooking-card">
+			<div class="mabooking-table-wrap">
+				<table class="mabooking-table">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Event</th>
+							<th>Venue / Room</th>
+							<th>Client</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php if (!$this->pastBookings) : ?>
+							<tr><td colspan="5" class="mabooking-empty">No past events.</td></tr>
+						<?php else : ?>
+							<?php foreach ($this->pastBookings as $booking) : ?>
+								<tr data-search-row>
+									<td>
+										<div class="mabooking-table__primary"><?php echo htmlspecialchars($booking->booking_date, ENT_QUOTES, 'UTF-8'); ?></div>
+										<div class="mabooking-table__secondary"><?php echo htmlspecialchars(substr($booking->start_time, 0, 5) . ' - ' . substr($booking->end_time, 0, 5), ENT_QUOTES, 'UTF-8'); ?></div>
+									</td>
+									<td><?php echo htmlspecialchars($booking->event_title, ENT_QUOTES, 'UTF-8'); ?></td>
+									<td>
+										<div class="mabooking-table__primary"><?php echo htmlspecialchars($booking->space_title, ENT_QUOTES, 'UTF-8'); ?></div>
+										<div class="mabooking-table__secondary"><?php echo htmlspecialchars($booking->venue_title, ENT_QUOTES, 'UTF-8'); ?></div>
+									</td>
+									<td><?php echo htmlspecialchars($booking->client_name, ENT_QUOTES, 'UTF-8'); ?></td>
+									<td><?php echo $renderStatusBadge((string) $booking->status); ?></td>
+								</tr>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-	document.querySelectorAll('.iccbooking-grid__cell[data-booking-date]').forEach(function (cell) {
+	var tabs = document.querySelectorAll('.mabooking-tab');
+	var panels = document.querySelectorAll('.mabooking-pane');
+	var search = document.getElementById('mabooking-dashboard-search');
+
+	tabs.forEach(function (tab) {
+		tab.addEventListener('click', function () {
+			var target = tab.getAttribute('data-tab-target');
+
+			tabs.forEach(function (item) {
+				item.classList.toggle('is-active', item === tab);
+				item.setAttribute('aria-selected', item === tab ? 'true' : 'false');
+			});
+
+			panels.forEach(function (panel) {
+				var isActive = panel.getAttribute('data-tab-panel') === target;
+				panel.classList.toggle('is-active', isActive);
+				panel.hidden = !isActive;
+			});
+		});
+	});
+
+	document.querySelectorAll('.mabooking-grid__cell[data-booking-date]').forEach(function (cell) {
 		cell.addEventListener('click', function () {
 			var date = cell.getAttribute('data-booking-date');
 			window.location.href = 'index.php?option=com_mabooking&task=booking.add&booking_date=' + date;
 		});
 		cell.addEventListener('keydown', function (e) {
-			if (e.key === 'Enter') cell.click();
+			if (e.key === 'Enter') {
+				cell.click();
+			}
 		});
 	});
+
+	if (search) {
+		search.addEventListener('input', function () {
+			var query = search.value.toLowerCase().trim();
+
+			document.querySelectorAll('[data-search-row]').forEach(function (row) {
+				var text = row.textContent.toLowerCase();
+				row.hidden = query !== '' && text.indexOf(query) === -1;
+			});
+		});
+	}
 });
 </script>
 <style>
-.iccbooking-admin { display: grid; gap: 1.5rem; color: #1c2834; }
-.iccbooking-admin__header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
-.iccbooking-admin__header h1 { margin: 0 0 .35rem; font-size: 2rem; font-weight: 700; }
-.iccbooking-admin__header p { margin: 0; color: #667085; }
-.iccbooking-admin__actions { display: flex; gap: .75rem; flex-wrap: wrap; }
-.iccbooking-admin__primary, .iccbooking-admin__ghost { padding: .8rem 1rem; border-radius: .7rem; text-decoration: none; font-weight: 700; }
-.iccbooking-admin__primary { background: #314155; color: #fff; }
-.iccbooking-admin__ghost { background: #fff; color: #314155; border: 1px solid #d8dee8; }
-.iccbooking-admin__stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
-.iccbooking-admin__stat { background: #fff; border: 1px solid #e4e9f0; border-radius: 1rem; padding: 1.2rem 1.25rem; box-shadow: 0 8px 24px rgba(28, 40, 52, .04); }
-.iccbooking-admin__stat span { display: block; font-size: .78rem; color: #6b7280; text-transform: uppercase; letter-spacing: .08em; }
-.iccbooking-admin__stat strong { display: block; margin-top: .65rem; font-size: 2rem; }
-.iccbooking-admin__stat .is-confirmed { color: #15803d; }
-.iccbooking-admin__stat .is-pending { color: #c2410c; }
-.iccbooking-admin__stat .is-cancelled { color: #b91c1c; }
-.iccbooking-panel, .iccbooking-table { background: #fff; border: 1px solid #e4e9f0; border-radius: 1.2rem; box-shadow: 0 10px 28px rgba(28, 40, 52, .05); overflow: hidden; }
-.iccbooking-panel__top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.5rem; border-bottom: 1px solid #edf2f7; }
-.iccbooking-panel__top h2 { margin: 0 0 .3rem; font-size: 1.5rem; }
-.iccbooking-panel__top p, .iccbooking-table__head p { margin: 0; color: #667085; }
-.iccbooking-panel__nav { display: flex; gap: .6rem; align-items: center; }
-.iccbooking-panel__nav a { text-decoration: none; color: #314155; padding: .55rem .8rem; border: 1px solid #d8dee8; border-radius: .6rem; background: #fff; }
-.iccbooking-panel__filters { display: flex; flex-wrap: wrap; gap: .75rem; padding: 1rem 1.5rem; border-bottom: 1px solid #edf2f7; }
-.iccbooking-panel__filters span { display: inline-flex; align-items: center; gap: .55rem; padding: .55rem .9rem; border-radius: 999px; background: #eef3f8; color: #486074; font-size: .78rem; font-weight: 700; }
-.iccbooking-panel__filters .is-active { background: #1c2834; color: #fff; }
-.dot { width: .55rem; height: .55rem; border-radius: 50%; display: inline-block; }
-.dot--confirmed { background: #16a34a; }
-.dot--pending { background: #ea580c; }
-.dot--cancelled { background: #dc2626; }
-.dot--empty { background: #94a3b8; }
-.iccbooking-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .8rem; padding: 1.5rem; background: #f8fafc; }
-.iccbooking-grid__head { text-align: center; font-size: .78rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .08em; }
-.iccbooking-grid__cell { min-height: 9rem; display: grid; align-content: start; gap: .45rem; background: #fff; border: 1px solid #e2e8f0; border-radius: .9rem; padding: .75rem; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
-.iccbooking-grid__cell:hover { border-color: #314155; box-shadow: 0 4px 12px rgba(49,65,85,.12); }
-.iccbooking-grid__cell--blank { background: transparent; border-style: dashed; }
-.iccbooking-grid__day { font-weight: 700; color: #1c2834; }
-.iccbooking-chip { display: grid; gap: .1rem; padding: .45rem .55rem; border-radius: .7rem; font-size: .72rem; line-height: 1.35; }
-.iccbooking-chip--confirmed { background: #effaf3; color: #166534; }
-.iccbooking-chip--pending { background: #fff5eb; color: #9a3412; }
-.iccbooking-chip--cancelled { background: #fef2f2; color: #991b1b; }
-.iccbooking-chip--empty { background: #f8fafc; color: #64748b; }
-.iccbooking-legend { display: flex; flex-wrap: wrap; gap: 1rem; padding: 0 1.5rem 1.5rem; color: #64748b; font-size: .8rem; font-weight: 600; }
-.iccbooking-table__head { padding: 1.5rem 1.5rem 0; }
-.iccbooking-table__head h3 { margin: 0 0 .35rem; font-size: 1.15rem; }
-.iccbooking-table table { margin: 1rem 0 0; }
-.iccbooking-badge { display: inline-block; padding: .35rem .7rem; border-radius: 999px; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
-.iccbooking-badge--confirmed { background: #effaf3; color: #166534; }
-.iccbooking-badge--pending { background: #fff5eb; color: #9a3412; }
-.iccbooking-badge--cancelled { background: #fef2f2; color: #991b1b; }
+.mabooking-admin { color: #1c2834; max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: grid; gap: 1.5rem; background: rgba(248, 250, 252, .85); }
+.mabooking-admin__header, .mabooking-admin__controls, .mabooking-card__top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.mabooking-admin__header h1, .mabooking-section-heading h2 { margin: 0; font-size: 2rem; font-weight: 700; letter-spacing: -.02em; }
+.mabooking-admin__header p, .mabooking-section-heading p { margin: .3rem 0 0; color: #6b7280; font-size: .9rem; }
+.mabooking-admin__actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.mabooking-button, .mabooking-inline-button { text-decoration: none; font-weight: 700; font-size: .75rem; border-radius: .55rem; transition: background-color .2s, border-color .2s, color .2s; }
+.mabooking-button { padding: .8rem 1rem; }
+.mabooking-button--primary { background: #314155; color: #fff; border: 1px solid #314155; }
+.mabooking-button--primary:hover { background: #1c2834; border-color: #1c2834; color: #fff; }
+.mabooking-button--ghost, .mabooking-inline-button { background: #fff; color: #4b5563; border: 1px solid #e5e7eb; }
+.mabooking-inline-button { padding: .45rem .8rem; }
+.mabooking-admin__controls { flex-wrap: wrap; align-items: flex-start; }
+.mabooking-search { max-width: 22rem; width: 100%; }
+.mabooking-search input { width: 100%; border: 1px solid #e5e7eb; border-radius: .65rem; background: #fff; padding: .78rem 1rem; font-size: .92rem; box-shadow: 0 1px 2px rgba(15, 23, 42, .05); }
+.mabooking-tabs { display: inline-flex; flex-wrap: wrap; border: 1px solid #e5e7eb; border-radius: 999px; padding: .25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, .06); }
+.mabooking-tab { border: 0; background: transparent; color: #6b7280; padding: .7rem 1.2rem; border-radius: 999px; font-size: .75rem; font-weight: 700; }
+.mabooking-tab.is-active { background: #314155; color: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, .12); }
+.mabooking-pane { display: none; gap: 1rem; }
+.mabooking-pane.is-active { display: grid; }
+.mabooking-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 1rem; box-shadow: 0 1px 3px rgba(15, 23, 42, .06); overflow: hidden; }
+.mabooking-card__top { padding: 1.5rem; border-bottom: 1px solid #f1f5f9; flex-wrap: wrap; }
+.mabooking-card__title { display: flex; align-items: center; gap: .9rem; flex-wrap: wrap; }
+.mabooking-card__title h3 { margin: 0; font-size: 1.35rem; }
+.mabooking-nav { display: flex; gap: .5rem; }
+.mabooking-nav a { width: 2rem; height: 2rem; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #e5e7eb; border-radius: .5rem; color: #6b7280; text-decoration: none; background: #fff; font-size: 1.2rem; }
+.mabooking-pills { display: flex; flex-wrap: wrap; gap: .75rem; padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f9; }
+.mabooking-pill { display: inline-flex; align-items: center; gap: .5rem; padding: .55rem .95rem; border-radius: 999px; font-size: .76rem; font-weight: 700; }
+.mabooking-pill i { width: .5rem; height: .5rem; border-radius: 999px; display: inline-block; }
+.mabooking-pill--active { background: #1c2834; color: #fff; }
+.mabooking-pill--blue { background: #eff6ff; color: #2563eb; }
+.mabooking-pill--blue i { background: #3b82f6; }
+.mabooking-pill--amber { background: #fff7ed; color: #d97706; }
+.mabooking-pill--amber i { background: #f59e0b; }
+.mabooking-pill--green { background: #ecfdf5; color: #16a34a; }
+.mabooking-pill--green i { background: #22c55e; }
+.mabooking-grid-head { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); text-align: center; padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f9; }
+.mabooking-grid-head div { font-size: .75rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .08em; }
+.mabooking-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .75rem; padding: 1.5rem; background: #fff; }
+.mabooking-grid__cell { min-height: 7rem; border: 1px solid #f1f5f9; border-radius: .85rem; padding: .65rem; display: grid; align-content: start; gap: .4rem; cursor: pointer; }
+.mabooking-grid__cell--blank { border-color: transparent; background: transparent; cursor: default; }
+.mabooking-grid__cell.is-today { background: #f8fafc; border-color: #9ca3af; box-shadow: inset 0 0 0 1px #d1d5db; }
+.mabooking-grid__day { font-size: .78rem; font-weight: 700; color: #4b5563; }
+.mabooking-calendar-entry { display: flex; align-items: flex-start; gap: .45rem; font-size: .68rem; background: #f8fafc; border-radius: .65rem; padding: .4rem .45rem; }
+.mabooking-calendar-entry strong, .mabooking-table__primary { display: block; color: #1c2834; font-weight: 700; }
+.mabooking-calendar-entry span, .mabooking-table__secondary { color: #6b7280; font-size: .74rem; }
+.mabooking-calendar-entry__dot { width: .55rem; height: .55rem; border-radius: 999px; margin-top: .22rem; flex: 0 0 auto; }
+.is-blue { background: #3b82f6; }
+.is-red { background: #ef4444; }
+.is-green { background: #22c55e; }
+.is-gold { background: #f59e0b; }
+.is-slate { background: #64748b; }
+.mabooking-legend { padding: 1.5rem; border-top: 1px solid #f1f5f9; background: #f8fafc; }
+.mabooking-legend p { margin: 0 0 .75rem; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.mabooking-legend__items { display: flex; flex-wrap: wrap; gap: 2rem; font-size: .8rem; color: #4b5563; }
+.mabooking-legend__items div { display: flex; align-items: center; gap: .5rem; }
+.mabooking-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.mabooking-stat { background: #fff; border: 1px solid #e5e7eb; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 1px 3px rgba(15, 23, 42, .06); min-height: 8rem; display: grid; align-content: space-between; }
+.mabooking-stat span { color: #6b7280; font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.mabooking-stat strong { font-size: 2rem; }
+.is-green-text { color: #22c55e; }
+.is-amber-text { color: #f59e0b; }
+.is-red-text { color: #ef4444; }
+.mabooking-table-wrap { overflow-x: auto; }
+.mabooking-table { width: 100%; border-collapse: collapse; min-width: 760px; }
+.mabooking-table thead { background: #f8fafc; }
+.mabooking-table th { text-align: left; font-size: .73rem; color: #6b7280; text-transform: uppercase; letter-spacing: .08em; padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f9; }
+.mabooking-table td { padding: 1rem 1.5rem; border-top: 1px solid #f8fafc; vertical-align: top; }
+.mabooking-table tbody tr:hover { background: #fafafa; }
+.mabooking-room { display: flex; align-items: center; gap: .5rem; }
+.mabooking-status { display: inline-flex; align-items: center; padding: .35rem .75rem; border-radius: 999px; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.mabooking-status.is-green { background: #ecfdf5; color: #15803d; }
+.mabooking-status.is-amber { background: #fff7ed; color: #c2410c; }
+.mabooking-status.is-red { background: #fef2f2; color: #b91c1c; }
+.mabooking-status.is-slate { background: #f1f5f9; color: #475569; }
+.mabooking-row-link { color: #314155; text-decoration: none; font-weight: 700; }
+.mabooking-empty, .is-center { text-align: center; }
 @media (max-width: 1100px) {
-	.iccbooking-admin__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-	.iccbooking-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+	.mabooking-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.mabooking-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+	.mabooking-grid-head { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: .75rem; }
 }
 @media (max-width: 800px) {
-	.iccbooking-admin__header, .iccbooking-panel__top { flex-direction: column; align-items: flex-start; }
-	.iccbooking-admin__stats, .iccbooking-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.mabooking-admin { padding: 1rem; }
+	.mabooking-admin__header, .mabooking-admin__controls, .mabooking-card__top { flex-direction: column; align-items: flex-start; }
+	.mabooking-stats, .mabooking-grid, .mabooking-grid-head { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 </style>
