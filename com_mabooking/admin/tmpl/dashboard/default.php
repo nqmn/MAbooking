@@ -202,7 +202,7 @@ $renderStatusBadge = static function (string $status): string {
 								<span class="mabooking-calendar-entry__dot <?php echo $roomColor; ?>"></span>
 								<div>
 									<strong><?php echo htmlspecialchars($booking->space_title, ENT_QUOTES, 'UTF-8'); ?></strong>
-									<span><?php echo htmlspecialchars(substr($booking->start_time, 0, 5), ENT_QUOTES, 'UTF-8'); ?></span>
+									<span><?php echo htmlspecialchars(substr($booking->start_time, 0, 5) . '-' . substr($booking->end_time, 0, 5), ENT_QUOTES, 'UTF-8'); ?></span>
 								</div>
 							</div>
 						<?php endforeach; ?>

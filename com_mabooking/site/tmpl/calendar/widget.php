@@ -73,7 +73,7 @@ $legendColors = [
 							<i class="mabooking-dot <?php echo $venueClass; ?>"></i>
 							<div>
 								<strong><?php echo htmlspecialchars($entry->space_title, ENT_QUOTES, 'UTF-8'); ?></strong>
-								<span><?php echo htmlspecialchars(substr($entry->start_time, 0, 5), ENT_QUOTES, 'UTF-8'); ?></span>
+								<span><?php echo htmlspecialchars(substr($entry->start_time, 0, 5) . '-' . substr($entry->end_time, 0, 5), ENT_QUOTES, 'UTF-8'); ?></span>
 							</div>
 						</div>
 					<?php endforeach; ?>
