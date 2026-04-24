@@ -63,6 +63,64 @@ $renderStatusBadge = static function (string $status): string {
 		</div>
 	</div>
 
+	<div class="mabooking-shortcuts">
+		<a class="mabooking-shortcut is-booking" href="<?php echo Route::_('index.php?option=com_mabooking&task=booking.add'); ?>">
+			<span class="mabooking-shortcut__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" focusable="false">
+					<path d="M7 2.75a.75.75 0 0 1 .75.75V5h8.5V3.5a.75.75 0 0 1 1.5 0V5h.75A2.5 2.5 0 0 1 21 7.5v11A2.5 2.5 0 0 1 18.5 21h-13A2.5 2.5 0 0 1 3 18.5v-11A2.5 2.5 0 0 1 5.5 5h.75V3.5A.75.75 0 0 1 7 2.75zm-2.5 7v8.75c0 .55.45 1 1 1h13c.55 0 1-.45 1-1V9.75h-15zm7.5 2a.75.75 0 0 1 .75.75v1.75h1.75a.75.75 0 0 1 0 1.5h-1.75v1.75a.75.75 0 0 1-1.5 0v-1.75H9.5a.75.75 0 0 1 0-1.5h1.75V12.5a.75.75 0 0 1 .75-.75z" fill="currentColor"/>
+				</svg>
+			</span>
+			<span class="mabooking-shortcut__body">
+				<strong>New Booking</strong>
+				<small>Create a booking request</small>
+			</span>
+		</a>
+		<a class="mabooking-shortcut is-list" href="<?php echo Route::_('index.php?option=com_mabooking&view=bookings'); ?>">
+			<span class="mabooking-shortcut__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" focusable="false">
+					<path d="M5 5.25A2.25 2.25 0 0 1 7.25 3h9.5A2.25 2.25 0 0 1 19 5.25v13.5A2.25 2.25 0 0 1 16.75 21h-9.5A2.25 2.25 0 0 1 5 18.75V5.25zm3.25 2a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5h-7.5zm0 4a.75.75 0 0 0 0 1.5h7.5a.75.75 0 0 0 0-1.5h-7.5zm0 4a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5h-4.5z" fill="currentColor"/>
+				</svg>
+			</span>
+			<span class="mabooking-shortcut__body">
+				<strong>Bookings</strong>
+				<small>Review and update records</small>
+			</span>
+		</a>
+		<a class="mabooking-shortcut is-venue" href="<?php echo Route::_('index.php?option=com_mabooking&view=venues'); ?>">
+			<span class="mabooking-shortcut__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" focusable="false">
+					<path d="M12 2.75 4 6.5v10.88c0 .4.24.77.61.92L12 21.25l7.39-2.95a1 1 0 0 0 .61-.92V6.5l-8-3.75zm0 1.66 5.83 2.73L12 9.87 6.17 7.14 12 4.41zm-6.5 4.1 5.75 2.69v8.17L5.5 17.08V8.51zm7.25 10.86V11.2l5.75-2.69v8.57l-5.75 2.29z" fill="currentColor"/>
+				</svg>
+			</span>
+			<span class="mabooking-shortcut__body">
+				<strong>Venues</strong>
+				<small>Manage venues and rooms</small>
+			</span>
+		</a>
+		<a class="mabooking-shortcut is-widget" href="<?php echo Route::_('index.php?option=com_mabooking&view=widgets'); ?>">
+			<span class="mabooking-shortcut__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" focusable="false">
+					<path d="M4.5 4h6A1.5 1.5 0 0 1 12 5.5v6A1.5 1.5 0 0 1 10.5 13h-6A1.5 1.5 0 0 1 3 11.5v-6A1.5 1.5 0 0 1 4.5 4zm9 0h6A1.5 1.5 0 0 1 21 5.5v3A1.5 1.5 0 0 1 19.5 10h-6A1.5 1.5 0 0 1 12 8.5v-3A1.5 1.5 0 0 1 13.5 4zm0 7h6a1.5 1.5 0 0 1 1.5 1.5v6a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5v-6A1.5 1.5 0 0 1 13.5 11zm-9 4h6A1.5 1.5 0 0 1 12 16.5v3A1.5 1.5 0 0 1 10.5 21h-6A1.5 1.5 0 0 1 3 19.5v-3A1.5 1.5 0 0 1 4.5 15z" fill="currentColor"/>
+				</svg>
+			</span>
+			<span class="mabooking-shortcut__body">
+				<strong>Widgets</strong>
+				<small>Open embed and widget tools</small>
+			</span>
+		</a>
+		<a class="mabooking-shortcut is-settings" href="<?php echo Route::_('index.php?option=com_config&view=component&component=com_mabooking'); ?>">
+			<span class="mabooking-shortcut__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" focusable="false">
+					<path d="M12 2.75a1 1 0 0 1 .97.76l.45 1.84a6.96 6.96 0 0 1 1.45.6l1.62-.93a1 1 0 0 1 1.22.16l1.13 1.13a1 1 0 0 1 .16 1.22l-.93 1.62c.24.46.44.94.6 1.45l1.84.45a1 1 0 0 1 .76.97v1.6a1 1 0 0 1-.76.97l-1.84.45a6.96 6.96 0 0 1-.6 1.45l.93 1.62a1 1 0 0 1-.16 1.22l-1.13 1.13a1 1 0 0 1-1.22.16l-1.62-.93c-.46.24-.94.44-1.45.6l-.45 1.84a1 1 0 0 1-.97.76h-1.6a1 1 0 0 1-.97-.76l-.45-1.84a6.96 6.96 0 0 1-1.45-.6l-1.62.93a1 1 0 0 1-1.22-.16L5.1 18.84a1 1 0 0 1-.16-1.22l.93-1.62a6.96 6.96 0 0 1-.6-1.45l-1.84-.45a1 1 0 0 1-.76-.97v-1.6a1 1 0 0 1 .76-.97l1.84-.45c.16-.51.36-.99.6-1.45l-.93-1.62a1 1 0 0 1 .16-1.22L6.23 5.2a1 1 0 0 1 1.22-.16l1.62.93c.46-.24.94-.44 1.45-.6l.45-1.84a1 1 0 0 1 .97-.76h1.6zm0 6.25a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" fill="currentColor"/>
+				</svg>
+			</span>
+			<span class="mabooking-shortcut__body">
+				<strong>Settings</strong>
+				<small>Open component options</small>
+			</span>
+		</a>
+	</div>
+
 	<div class="mabooking-admin__controls">
 		<div class="mabooking-search">
 			<input type="search" id="mabooking-dashboard-search" placeholder="Search bookings..." aria-label="Search bookings">
@@ -343,6 +401,19 @@ document.addEventListener('DOMContentLoaded', function () {
 .mabooking-admin__header h1, .mabooking-section-heading h2 { margin: 0; font-size: 2rem; font-weight: 700; letter-spacing: -.02em; }
 .mabooking-admin__header p, .mabooking-section-heading p { margin: .3rem 0 0; color: #6b7280; font-size: .9rem; }
 .mabooking-admin__actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.mabooking-shortcuts { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1rem; }
+.mabooking-shortcut { position: relative; display: flex; align-items: center; gap: .95rem; padding: 1rem 1.05rem; border-radius: 1rem; text-decoration: none; background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(15, 23, 42, .06); transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.mabooking-shortcut:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(15, 23, 42, .08); border-color: #cbd5e1; }
+.mabooking-shortcut__icon { width: 3rem; height: 3rem; display: inline-flex; align-items: center; justify-content: center; border-radius: .95rem; flex: 0 0 auto; }
+.mabooking-shortcut__icon svg { width: 1.4rem; height: 1.4rem; display: block; }
+.mabooking-shortcut__body { display: grid; gap: .2rem; min-width: 0; }
+.mabooking-shortcut__body strong { color: #1c2834; font-size: .9rem; line-height: 1.2; }
+.mabooking-shortcut__body small { color: #6b7280; font-size: .75rem; line-height: 1.35; }
+.mabooking-shortcut.is-booking .mabooking-shortcut__icon { background: #eff6ff; color: #2563eb; }
+.mabooking-shortcut.is-list .mabooking-shortcut__icon { background: #f8fafc; color: #475569; }
+.mabooking-shortcut.is-venue .mabooking-shortcut__icon { background: #ecfdf5; color: #16a34a; }
+.mabooking-shortcut.is-widget .mabooking-shortcut__icon { background: #fff7ed; color: #ea580c; }
+.mabooking-shortcut.is-settings .mabooking-shortcut__icon { background: #f5f3ff; color: #7c3aed; }
 .mabooking-button, .mabooking-inline-button { text-decoration: none; font-weight: 700; font-size: .75rem; border-radius: .55rem; transition: background-color .2s, border-color .2s, color .2s; }
 .mabooking-button { padding: .8rem 1rem; }
 .mabooking-button--primary { background: #314155; color: #fff; border: 1px solid #314155; }
@@ -415,6 +486,7 @@ document.addEventListener('DOMContentLoaded', function () {
 .mabooking-row-link { color: #314155; text-decoration: none; font-weight: 700; }
 .mabooking-empty, .is-center { text-align: center; }
 @media (max-width: 1100px) {
+	.mabooking-shortcuts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 	.mabooking-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 	.mabooking-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 	.mabooking-grid-head { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: .75rem; }
@@ -422,6 +494,7 @@ document.addEventListener('DOMContentLoaded', function () {
 @media (max-width: 800px) {
 	.mabooking-admin { padding: 1rem; }
 	.mabooking-admin__header, .mabooking-admin__controls, .mabooking-card__top { flex-direction: column; align-items: flex-start; }
+	.mabooking-shortcuts { grid-template-columns: 1fr; }
 	.mabooking-stats, .mabooking-grid, .mabooking-grid-head { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 </style>
