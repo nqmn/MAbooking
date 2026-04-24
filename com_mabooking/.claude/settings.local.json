@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ssh-remote__ssh_execute"
+    ]
+  }
+}

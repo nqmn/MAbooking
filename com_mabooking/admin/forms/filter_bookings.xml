@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fields name="filter">
+		<field
+			name="search"
+			type="text"
+			label="JSEARCH_FILTER"
+			description="JSEARCH_FILTER"
+			hint="Search bookings"
+		/>
+		<field name="status" type="list" label="Status" onchange="this.form.submit();">
+			<option value="">All statuses</option>
+			<option value="pending">Pending</option>
+			<option value="confirmed">Confirmed</option>
+			<option value="cancelled">Cancelled</option>
+		</field>
+	</fields>
+</form>

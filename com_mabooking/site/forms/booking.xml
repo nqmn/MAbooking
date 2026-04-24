@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<field name="event_title" type="text" label="Event Title" required="true" />
+	<field name="booking_date" type="calendar" label="Booking Date" format="%Y-%m-%d" required="true" filter="user_utc" />
+	<field name="start_time" type="text" label="Start Time" required="true" hint="09:00:00" pattern="^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$" />
+	<field name="end_time" type="text" label="End Time" required="true" hint="17:00:00" pattern="^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$" />
+	<field
+		name="venue_id"
+		type="sql"
+		label="Venue"
+		query="SELECT id AS value, title AS text FROM #__mabooking_venues WHERE state = 1 ORDER BY ordering, title"
+		key_field="value"
+		value_field="text"
+		required="true"
+	/>
+	<field
+		name="space_id"
+		type="sql"
+		label="Room / Space"
+		query="SELECT id AS value, title AS text FROM #__mabooking_spaces WHERE state = 1 ORDER BY venue_id, ordering, title"
+		key_field="value"
+		value_field="text"
+		required="true"
+	/>
+	<field name="client_name" type="text" label="Your Name" required="true" />
+	<field name="client_phone" type="text" label="Phone Number" required="true" />
+	<field name="client_email" type="email" label="Email Address" required="true" />
+	<field name="attendees" type="number" label="Estimated Attendees" default="0" min="0" />
+	<field name="notes" type="textarea" label="Notes" rows="5" filter="string" />
+</form>

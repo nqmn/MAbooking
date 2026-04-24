@@ -1,0 +1,2 @@
+-- No schema changes in 0.4.3.
+-- This version formalizes Joomla update-schema support for future uploads.

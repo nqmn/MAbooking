@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" method="upgrade">
+	<name>com_mabooking</name>
+	<author>NQMN</author>
+	<authorEmail>mohdadil@live.com</authorEmail>
+	<creationDate>2026-04-24</creationDate>
+	<version>0.4.5</version>
+	<description>COM_MABOOKING_XML_DESCRIPTION</description>
+	<namespace path="src">Icc\Component\Mabooking</namespace>
+
+	<files folder="site">
+		<filename>mabooking.php</filename>
+		<folder>forms</folder>
+		<folder>services</folder>
+		<folder>src</folder>
+		<folder>tmpl</folder>
+	</files>
+	<languages folder="site">
+		<language tag="en-GB">language/en-GB/com_mabooking.ini</language>
+	</languages>
+
+	<administration>
+		<menu link="option=com_mabooking&amp;view=dashboard">MA Booking</menu>
+		<submenu>
+			<menu link="option=com_mabooking&amp;view=dashboard">COM_MABOOKING_SUBMENU_DASHBOARD</menu>
+			<menu link="option=com_mabooking&amp;view=bookings">COM_MABOOKING_SUBMENU_BOOKINGS</menu>
+			<menu link="option=com_mabooking&amp;view=widgets">COM_MABOOKING_SUBMENU_WIDGETS</menu>
+		</submenu>
+
+		<files folder="admin">
+			<filename>mabooking.php</filename>
+			<filename>config.xml</filename>
+			<folder>forms</folder>
+			<folder>services</folder>
+			<folder>sql</folder>
+			<folder>src</folder>
+			<folder>tmpl</folder>
+		</files>
+		<languages folder="admin">
+			<language tag="en-GB">language/en-GB/com_mabooking.ini</language>
+			<language tag="en-GB">language/en-GB/com_mabooking.sys.ini</language>
+		</languages>
+	</administration>
+
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8mb4">sql/install.mysql.utf8.sql</file>
+		</sql>
+	</install>
+
+	<update>
+		<schemas>
+			<schemapath type="mysql">sql/updates/mysql</schemapath>
+		</schemas>
+	</update>
+
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8mb4">sql/uninstall.mysql.utf8.sql</file>
+		</sql>
+	</uninstall>
+</extension>

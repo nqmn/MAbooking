@@ -1,0 +1,1791 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ipoh Convention Centre</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      background: #ffffff;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+    @keyframes slideInLeft {
+      0% { opacity: 0; transform: translate3d(-56px, 0, 0); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
+    @keyframes slideInRight {
+      0% { opacity: 0; transform: translate3d(56px, 0, 0); }
+      100% { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
+    @keyframes imageReveal {
+      0% { opacity: 0; transform: scale(1.08); filter: blur(10px); }
+      100% { opacity: 1; transform: scale(1); filter: blur(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease-out;
+    }
+    .reveal-on-scroll {
+      opacity: 0;
+      will-change: transform, opacity, filter;
+    }
+    .reveal-on-scroll.card-enter-left {
+      transform: translate3d(-56px, 0, 0);
+    }
+    .reveal-on-scroll.card-enter-right {
+      transform: translate3d(56px, 0, 0);
+    }
+    .reveal-on-scroll.media-enter {
+      transform: scale(1.08);
+      filter: blur(10px);
+    }
+    .reveal-on-scroll.is-visible {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+    .reveal-on-scroll.is-visible.card-enter-left {
+      animation: slideInLeft 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .reveal-on-scroll.is-visible.card-enter-right {
+      animation: slideInRight 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .reveal-on-scroll.is-visible.media-enter {
+      animation: imageReveal 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .animate-fadeIn,
+      .reveal-on-scroll,
+      .reveal-on-scroll.card-enter-left,
+      .reveal-on-scroll.card-enter-right,
+      .reveal-on-scroll.media-enter,
+      .reveal-on-scroll.is-visible.card-enter-left,
+      .reveal-on-scroll.is-visible.card-enter-right,
+      .reveal-on-scroll.is-visible.media-enter {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+const { useState, useEffect } = React;
+
+const makeIcon = (iconClass) => {
+  return (iconProps = {}) => {
+    const { size = 24, className = '', ...props } = iconProps;
+    return React.createElement('i', {
+      ...props,
+      className: `${iconClass} ${className}`.trim(),
+      style: { fontSize: `${size}px`, lineHeight: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center' },
+      'aria-hidden': 'true'
+    });
+  };
+};
+
+const Menu = makeIcon('fa-solid fa-bars');
+const X = makeIcon('fa-solid fa-xmark');
+const MapPin = makeIcon('fa-solid fa-location-dot');
+const Phone = makeIcon('fa-solid fa-phone');
+const Mail = makeIcon('fa-solid fa-envelope');
+const Clock = makeIcon('fa-regular fa-clock');
+const CalendarIcon = makeIcon('fa-regular fa-calendar');
+const Facebook = makeIcon('fa-brands fa-facebook-f');
+const Twitter = makeIcon('fa-brands fa-x-twitter');
+const Instagram = makeIcon('fa-brands fa-instagram');
+const Linkedin = makeIcon('fa-brands fa-linkedin-in');
+const Youtube = makeIcon('fa-brands fa-youtube');
+const ChevronLeft = makeIcon('fa-solid fa-chevron-left');
+const ChevronRight = makeIcon('fa-solid fa-chevron-right');
+const Check = makeIcon('fa-solid fa-check');
+const ArrowRight = makeIcon('fa-solid fa-arrow-right');
+const Globe = makeIcon('fa-solid fa-globe');
+const Accessibility = makeIcon('fa-solid fa-universal-access');
+const Users = makeIcon('fa-solid fa-users');
+const MessageCircle = makeIcon('fa-regular fa-comment');
+const ChevronDown = makeIcon('fa-solid fa-chevron-down');
+const Target = makeIcon('fa-solid fa-bullseye');
+const Eye = makeIcon('fa-regular fa-eye');
+const Building = makeIcon('fa-regular fa-building');
+const Star = makeIcon('fa-solid fa-star');
+const MapIcon = makeIcon('fa-regular fa-map');
+const CalendarDays = makeIcon('fa-regular fa-calendar-days');
+const Coffee = makeIcon('fa-solid fa-mug-saucer');
+const Monitor = makeIcon('fa-solid fa-desktop');
+const Car = makeIcon('fa-solid fa-car');
+const Truck = makeIcon('fa-solid fa-truck');
+const Send = makeIcon('fa-regular fa-paper-plane');
+const Shield = makeIcon('fa-solid fa-shield-halved');
+const User = makeIcon('fa-regular fa-user');
+const Lock = makeIcon('fa-solid fa-lock');
+const EyeOff = makeIcon('fa-regular fa-eye-slash');
+const LogOut = makeIcon('fa-solid fa-right-from-bracket');
+const HomeIcon = makeIcon('fa-solid fa-house');
+const Plus = makeIcon('fa-solid fa-plus');
+const Search = makeIcon('fa-solid fa-magnifying-glass');
+const Pencil = makeIcon('fa-solid fa-pen');
+const Trash2 = makeIcon('fa-regular fa-trash-can');
+const ImageIcon = makeIcon('fa-regular fa-image');
+
+// --- Color Constants based on Design System ---
+const COLORS = {
+  primary: '#4a7ba7',
+  darkNavy: '#1c2834',
+  calendarHeader: '#7a95b1',
+  lightGray: '#f0f4f8',
+  darkText: '#1e293b',
+  white: '#ffffff',
+  footerBg: '#2c3543'
+};
+
+// --- Mock Image Database mapped from Manifest ---
+const IMAGES = {
+  heroHome: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1920&q=80',
+  heroAbout: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80',
+  heroFacilities: 'https://images.unsplash.com/photo-1431540015161-0bf868a2d407?w=1920&q=80',
+  heroAmenities: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1920&q=80',
+  heroEvents: 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=1920&q=80',
+  heroGallery: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?w=1920&q=80',
+  heroContact: 'https://images.unsplash.com/photo-1582653291997-079a1c04e5d1?w=1920&q=80',
+  featuredHome: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&q=80',
+  amenityPrayer: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=600&q=80',
+  amenityAtm: 'https://images.unsplash.com/photo-1620714223084-8fcacc6dfd8d?w=600&q=80',
+  amenityParking: 'https://images.unsplash.com/photo-1623091410901-00e2d268901f?w=600&q=80',
+  galleryBallroom: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&q=80',
+  galleryExhibition: 'https://images.unsplash.com/photo-1531058020387-3be344556be6?w=800&q=80',
+  galleryMeeting: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
+  galleryCharity: 'https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=800&q=80',
+  galleryTech: 'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=800&q=80',
+  landscapeBanner: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=1920&q=80',
+  mapPlaceholder: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1920&q=80',
+};
+
+// --- Reusable Components ---
+
+const Button = ({ children, onClick, variant = 'primary', className = '' }) => {
+  const baseStyles = "px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-sm text-sm tracking-wide";
+  const variants = {
+    primary: `bg-[#1c2834] text-white hover:bg-[#2c3d4f]`,
+    outline: `border-2 border-[#1c2834] text-[#1c2834] hover:bg-[#1c2834] hover:text-white`,
+    white: `bg-white text-[#1c2834] hover:bg-gray-100`
+  };
+  return (
+    <button onClick={onClick} className={`${baseStyles} ${variants[variant]} ${className}`}>
+      {children}
+    </button>
+  );
+};
+
+const enterClass = (index = 0) => index % 2 === 0 ? 'reveal-on-scroll card-enter-left' : 'reveal-on-scroll card-enter-right';
+const enterStyle = (index = 0, base = 0.08) => ({ animationDelay: `${base + index * 0.08}s` });
+const mediaRevealClass = 'reveal-on-scroll media-enter';
+
+const setupScrollReveal = () => {
+  const nodes = Array.from(document.querySelectorAll('.reveal-on-scroll'));
+  if (!nodes.length) {
+    return () => {};
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.18,
+      rootMargin: '0px 0px -8% 0px'
+    }
+  );
+
+  nodes.forEach((node) => {
+    node.classList.remove('is-visible');
+    observer.observe(node);
+  });
+
+  return () => observer.disconnect();
+};
+
+// --- Page Components ---
+
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+const Home = ({ setPage }) => {
+  const today = new Date();
+  const [calYear, setCalYear] = useState(today.getFullYear());
+  const [calMonth, setCalMonth] = useState(today.getMonth());
+
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const startDay = new Date(calYear, calMonth, 1).getDay();
+  const prevMonthLastDay = new Date(calYear, calMonth, 0).getDate();
+  const leadingPad = Array.from({ length: startDay }, (_, i) => prevMonthLastDay - startDay + 1 + i);
+  const totalCells = startDay + daysInMonth;
+  const trailingPad = Array.from({ length: totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7) }, (_, i) => i + 1);
+  const isTodayCell = (day) => day === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear();
+
+  const prevMonth = () => {
+    setCalMonth(m => {
+      if (m === 0) { setCalYear(y => y - 1); return 11; }
+      return m - 1;
+    });
+  };
+  const nextMonth = () => {
+    setCalMonth(m => {
+      if (m === 11) { setCalYear(y => y + 1); return 0; }
+      return m + 1;
+    });
+  };
+
+  return (
+    <div className="animate-fadeIn pb-16">
+      {/* Plain Hero Image Without Text Overlay */}
+      <div 
+        className="w-full h-[450px] bg-cover bg-center"
+        style={{ backgroundImage: `url(${IMAGES.heroHome})` }}
+      ></div>
+
+      {/* Hero Text Below Image */}
+      <div className="text-center py-12 px-4 max-w-4xl mx-auto">
+        <h1 className="text-3xl md:text-4xl font-bold mb-4 tracking-wider text-[#1c2834] uppercase">
+          MARK THE DATE FOR GREATNESS
+        </h1>
+        <p className="text-gray-600 text-lg">
+          Discover available dates and make your reservation to bring your special occasion to life.
+        </p>
+      </div>
+
+      {/* Calendar Section */}
+      <section className="px-4 pb-20">
+        <div className="max-w-5xl mx-auto">
+          <div className="bg-white rounded-t-xl shadow-lg border border-gray-100 overflow-hidden">
+            {/* Calendar Header */}
+            <div className="flex justify-between items-center px-6 py-4" style={{ backgroundColor: COLORS.calendarHeader }}>
+              <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#7a95b1] hover:bg-gray-50">
+                <ChevronLeft size={20} />
+              </button>
+              <h3 className="text-xl font-bold text-white tracking-widest uppercase">{MONTH_NAMES[calMonth]} {calYear}</h3>
+              <button onClick={nextMonth} className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#7a95b1] hover:bg-gray-50">
+                <ChevronRight size={20} />
+              </button>
+            </div>
+            
+            {/* Calendar Legend */}
+            <div className="px-6 py-4 bg-white border-b border-gray-100">
+              <div className="flex flex-wrap items-center gap-6 mb-2 text-sm font-semibold text-gray-700">
+                <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-blue-500"></div> Grand Ballroom</span>
+                <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-red-500"></div> Exhibition Hall</span>
+                <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-green-500"></div> Bougainvillea Room</span>
+                <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-yellow-400"></div> Town Hall</span>
+              </div>
+              <p className="text-xs text-gray-400 italic">Hover over the highlighted dates to view the events and venue details for that day.</p>
+            </div>
+
+            {/* Calendar Days Header */}
+            <div className="grid grid-cols-7 text-center font-bold text-xs py-3" style={{ backgroundColor: COLORS.darkNavy, color: 'white' }}>
+              <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+            </div>
+
+            {/* Calendar Grid */}
+            <div className="grid grid-cols-7 gap-px bg-gray-100">
+              {leadingPad.map(d => (
+                <div key={`lead-${d}`} className="bg-gray-50 h-28 p-3 text-gray-400 font-semibold">{d}</div>
+              ))}
+              {[...Array(daysInMonth)].map((_, i) => {
+                const day = i + 1;
+                const isCurrentDay = isTodayCell(day);
+                return (
+                  <div key={day} className={`bg-white h-28 p-3 border border-transparent hover:border-gray-300 transition-colors relative cursor-pointer ${isCurrentDay ? 'border-green-400 hover:border-green-500 bg-[#f7fcf9]' : ''}`}>
+                    <span className={`font-semibold text-sm ${isCurrentDay ? 'text-green-600' : 'text-[#1c2834]'}`}>
+                      {day}
+                    </span>
+                    {isCurrentDay && (
+                      <span className="absolute top-3 right-3 text-[9px] font-bold text-green-700 bg-green-100 border border-green-300 px-1 py-0.5 rounded-sm">
+                        TODAY
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+              {trailingPad.map(d => (
+                <div key={`trail-${d}`} className="bg-gray-50 h-28 p-3 text-gray-400 font-semibold">{d}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Section */}
+      <section className="py-20 px-4 bg-white">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-16">
+          <div className="md:w-1/2">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-wide text-[#1c2834] uppercase leading-tight">
+              Timeless Grandeur in the Heart of Ipoh
+            </h2>
+            <p className="text-gray-600 mb-8 leading-relaxed text-sm md:text-base">
+              The Ipoh Convention Centre (ICC) stands as a premier hub for local and international events, blending elegant design with state-of-the-art facilities to create unparalleled experiences.
+              <br/><br/>
+              Strategically located in the heart of Ipoh, ICC offers a variety of versatile spaces, from grand ballrooms to intimate meeting rooms, ensuring every event-be it a massive exhibition or an exclusive gathering-is executed with absolute perfection.
+            </p>
+            <button onClick={() => setPage('about')} className="text-[#1c2834] font-bold uppercase tracking-wider text-sm flex items-center gap-2 hover:opacity-70 transition-opacity">
+              Discover More <ArrowRight size={18} />
+            </button>
+          </div>
+          <div className={`md:w-1/2 ${enterClass(1)}`} style={{ animationDelay: '0.18s' }}>
+            <img src={IMAGES.galleryBallroom} alt="Grandeur Interior" className={`w-full h-auto shadow-lg ${mediaRevealClass}`} style={{ animationDelay: '0.24s' }} />
+          </div>
+        </div>
+      </section>
+
+      {/* Upcoming Events Overview */}
+      <section className="py-20 px-4" style={{ backgroundColor: COLORS.lightGray }}>
+        <div className="max-w-6xl mx-auto">
+          
+          <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-4">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-wide text-[#1c2834] uppercase">
+              A Glimpse of What's Coming
+            </h2>
+            <button onClick={() => setPage('events')} className="text-[#1c2834] font-bold uppercase tracking-wider text-sm flex items-center gap-2 hover:opacity-70 transition-opacity">
+              View All <ArrowRight size={16} />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            {[
+              { title: "MALAYSIAN DAY SALE", type: "Sale Event", date: "15", month: "APR", venue: "Exhibition Hall", time: "10:00 AM - 10:00 PM", attendees: "500+ Attendees", image: IMAGES.galleryExhibition },
+              { title: "E-Mobility Asia (EMA)", type: "Technology", date: "20", month: "APR", venue: "Bougainvillea Room 1", time: "9:00 AM - 6:00 PM", attendees: "300+ Attendees", image: IMAGES.galleryTech },
+              { title: "Sustainability Environment Asia (SEA)", type: "Conference", date: "30", month: "APR", venue: "Grand Ballroom", time: "8:00 AM - 5:00 PM", attendees: "800+ Attendees", image: IMAGES.galleryMeeting }
+            ].map((event, i) => (
+              <div key={i} className={`bg-white shadow-sm border border-gray-100 group cursor-pointer hover:shadow-md transition-shadow flex flex-col h-full ${enterClass(i)}`} style={enterStyle(i)}>
+                <div className="h-48 relative">
+                  <img src={event.image} alt={event.title} className={`w-full h-full object-cover ${mediaRevealClass}`} style={enterStyle(i, 0.16)} />
+                  
+                  {/* Category Badge */}
+                  <div className="absolute top-4 left-4 bg-[#1c2834] text-white text-[10px] px-3 py-1 uppercase tracking-wider font-semibold">
+                    {event.type}
+                  </div>
+                  
+                  {/* Date Badge */}
+                  <div className="absolute -bottom-5 right-6 bg-white shadow-md border border-gray-100 flex flex-col items-center justify-center w-14 h-14">
+                    <span className="text-[10px] font-bold text-gray-500">{event.month}</span>
+                    <span className="text-xl font-bold text-[#1c2834] leading-none">{event.date}</span>
+                  </div>
+                </div>
+                
+                <div className="p-6 pt-10 flex flex-col flex-grow">
+                  <h3 className="text-lg font-bold text-[#1c2834] mb-3 leading-snug uppercase">{event.title}</h3>
+                  <p className="text-gray-500 text-xs mb-5 line-clamp-2">
+                    Join us for the highly anticipated {event.title}, an exceptional event bringing together professionals, innovators, and enthusiasts from across the region.
+                  </p>
+                  
+                  <div className="space-y-3 mb-6 flex-grow">
+                    <div className="flex items-center gap-3 text-xs text-gray-600">
+                      <Clock size={14} className="text-[#7a95b1]" /> {event.time}
+                    </div>
+                    <div className="flex items-center gap-3 text-xs text-gray-600">
+                      <MapPin size={14} className="text-[#7a95b1]" /> {event.venue}
+                    </div>
+                    <div className="flex items-center gap-3 text-xs text-gray-600">
+                      <Users size={14} className="text-[#7a95b1]" /> {event.attendees}
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-gray-100">
+                    <span className="text-[#1c2834] font-bold text-xs uppercase flex items-center gap-1 group-hover:opacity-70 transition-opacity">
+                      View Event Details <ArrowRight size={14} />
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Button onClick={() => setPage('events')}>VIEW ALL EVENTS</Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Plan Your Event CTA */}
+      <section className="px-4 mt-8">
+        <div className="max-w-6xl mx-auto rounded-2xl overflow-hidden relative shadow-lg">
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${IMAGES.landscapeBanner})` }}></div>
+          <div className="absolute inset-0 bg-black/60"></div>
+          
+          <div className="relative z-10 px-8 py-12 md:py-16 md:px-16 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-white max-w-2xl">
+              <h2 className="text-2xl md:text-3xl font-bold mb-3 uppercase tracking-wide">Plan Your Event at the ICC</h2>
+              <p className="text-gray-200 text-sm md:text-base opacity-90">
+                From intimate gatherings to grand international exhibitions, our dedicated team of event specialists come together to create an unforgettable experience for your guests.
+              </p>
+            </div>
+            <Button variant="white" onClick={() => setPage('contact')} className="shrink-0">Plan An Event</Button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+
+// --- Sub-Pages (Matched to Mockups) ---
+
+const About = () => (
+  <div className="animate-fadeIn bg-white pb-20">
+    <div className="w-full h-[400px] bg-cover bg-center" style={{ backgroundImage: `url(${IMAGES.heroAbout})` }}></div>
+    
+    <section className="py-20 px-4">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-16">
+        <div className="md:w-1/3">
+          <h1 className="text-4xl md:text-5xl font-bold text-[#1c2834] uppercase leading-tight tracking-wider">
+            IPOH<br/>CONVENTION<br/>CENTRE<br/>(ICC)
+          </h1>
+        </div>
+        <div className="md:w-2/3">
+          <h2 className="text-2xl font-bold mb-6 text-[#1c2834]">Your Premier Venue for Events, Exhibitions, & Conferences</h2>
+          <p className="text-gray-500 mb-12 text-sm leading-relaxed">
+            Ipoh Convention Centre (ICC) offers world-class facilities and exceptional service in the heart of Ipoh, making it the ideal choice for unforgettable events and business gatherings.
+          </p>
+          <div className="space-y-8">
+            {[
+              { icon: MapPin, title: "Prime Location", desc: "Located in the business district, surrounded by hotels, malls, and major attractions." },
+              { icon: Building, title: "Versatile Event Spaces", desc: "Grand ballrooms, exhibition halls, and meeting rooms to suit any event size." },
+              { icon: Star, title: "Top-Class Facilities", desc: "Modern soundproofing, VIP rooms, ample parking, and more." },
+              { icon: MapIcon, title: "Affordable Packages", desc: "Competitive pricing for a premium venue experience." }
+            ].map((feat, i) => (
+              <div key={i} className="flex gap-5 items-start pb-6 border-b border-gray-100 last:border-0 last:pb-0">
+                <div className="w-12 h-12 bg-[#4a7ba7] rounded text-white flex items-center justify-center shrink-0 shadow-sm">
+                  <feat.icon size={22} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-[#1c2834] text-sm mb-1.5">{feat.title}</h4>
+                  <p className="text-gray-500 text-xs leading-relaxed">{feat.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="py-20 px-4 bg-[#f0f4f8]">
+      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 relative">
+        <div className="hidden md:block absolute top-1/2 left-1/2 w-px h-[60%] bg-gray-300 -translate-x-1/2 -translate-y-1/2"></div>
+        
+        <div className="bg-white p-10 md:p-14 rounded shadow-sm text-center border-t-4 border-[#4a7ba7] mx-auto w-full max-w-sm">
+          <div className="w-14 h-14 bg-[#4a7ba7] rounded-full text-white flex items-center justify-center mx-auto mb-6">
+            <Eye size={24} />
+          </div>
+          <h3 className="text-lg font-bold text-[#1c2834] mb-4 uppercase tracking-wider">OUR VISION</h3>
+          <p className="text-gray-500 text-sm leading-relaxed">
+            To be the premier venue for all types of events with unmatched ease and excellence.
+          </p>
+        </div>
+        
+        <div className="bg-white p-10 md:p-14 rounded shadow-sm text-center border-t-4 border-[#4a7ba7] mx-auto w-full max-w-sm">
+          <div className="w-14 h-14 bg-[#4a7ba7] rounded-full text-white flex items-center justify-center mx-auto mb-6">
+            <Target size={24} />
+          </div>
+          <h3 className="text-lg font-bold text-[#1c2834] mb-4 uppercase tracking-wider">OUR MISSION</h3>
+          <p className="text-gray-500 text-sm leading-relaxed">
+            To deliver seamless events and top-notch service for our clients.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section className="py-20 px-4 text-center">
+      <h2 className="text-2xl font-bold text-[#1c2834] mb-12 uppercase tracking-widest">SERVICES</h2>
+      <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-6">
+        {[
+          { icon: CalendarDays, label: "Event Spaces for All Occasions" },
+          { icon: Coffee, label: "Catering & Banquet Facilities" },
+          { icon: Monitor, label: "Audio-Visual & Stage Support" },
+          { icon: Car, label: "Secure & Spacious Parking" },
+          { icon: Building, label: "Prayer Facilities" },
+          { icon: Truck, label: "Loading Bay Access" },
+          { icon: Star, label: "VIP Parking Areas" }
+        ].map((srv, i) => (
+          <div key={i} className="bg-[#f0f4f8] w-[180px] h-[160px] flex flex-col items-center justify-center p-4 rounded shadow-sm hover:shadow-md transition-shadow">
+            <srv.icon size={36} className="text-[#1c2834] mb-4" />
+            <span className="text-xs font-semibold text-[#1c2834] leading-tight px-2">{srv.label}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+);
+
+const Facilities = () => (
+  <div className="animate-fadeIn bg-white pb-20">
+    <div className="w-full h-[400px] bg-cover bg-center" style={{ backgroundImage: `url(${IMAGES.heroFacilities})` }}></div>
+    
+    <section className="py-20 px-4">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-16">
+        <div className="md:w-1/3">
+          <h1 className="text-4xl md:text-5xl font-bold text-[#1c2834] uppercase leading-tight tracking-wider">
+            THE ART<br/>OF<br/>HOSTING
+          </h1>
+        </div>
+        <div className="md:w-2/3">
+          <h2 className="text-2xl font-bold mb-4 text-[#1c2834]">Experience State-of-the-Art Facilities & Elegant Spaces</h2>
+          <p className="text-gray-500 mb-10 text-sm leading-relaxed">
+            Ipoh Convention Centre (ICC) offers state-of-the-art facilities designed to accommodate events of all sizes in a luxurious and professional setting.
+          </p>
+          <div className="space-y-6">
+            {[
+              { title: "Advanced Technology", desc: "Equipped with high-end audio-visual systems and modern lighting." },
+              { title: "Flexible Seating Arrangements", desc: "Customizable setups for intimate gatherings to grand conventions." },
+              { title: "Elegant & Contemporary Design", desc: "Sophisticated interiors that provide a luxurious atmosphere." },
+              { title: "Versatile Meeting Rooms", desc: "VIP lounges and pre-function areas perfect for networking and exhibitions." }
+            ].map((feat, i) => (
+              <div key={i} className="flex gap-4 items-start pb-6 border-b border-gray-100 last:border-0">
+                <div className="w-10 h-10 bg-[#4a7ba7] rounded text-white flex items-center justify-center shrink-0 shadow-sm mt-1">
+                  <Star size={18} />
+                </div>
+                <div>
+                  <h4 className="font-bold text-[#1c2834] text-sm mb-1">{feat.title}</h4>
+                  <p className="text-gray-500 text-xs">{feat.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="py-20 px-4 bg-[#f0f4f8] text-center">
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-2xl font-bold mb-4 text-[#1c2834] uppercase tracking-widest">FLEXIBLE VENUES</h2>
+        <p className="text-gray-500 text-sm mb-12 max-w-2xl mx-auto">
+          Create, celebrate, and customize - ICC offers versatile spaces designed to bring your vision to life.
+        </p>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { title: "EXHIBITION HALL", img: IMAGES.galleryExhibition },
+            { title: "BOUGAINVILLEA ROOM", img: IMAGES.galleryMeeting },
+            { title: "GRAND BALLROOM", img: IMAGES.galleryBallroom },
+            { title: "OTHER VENUE", img: IMAGES.heroHome }
+          ].map((venue, i) => (
+            <div key={i} className={`relative h-64 bg-gray-200 group overflow-hidden shadow-sm ${enterClass(i)}`} style={enterStyle(i)}>
+              <img src={venue.img} alt={venue.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${mediaRevealClass}`} style={enterStyle(i, 0.14)} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end">
+                <h3 className="text-white text-xs font-bold tracking-wider p-4 uppercase w-full text-left">{venue.title}</h3>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  </div>
+);
+
+const Amenities = () => (
+  <div className="animate-fadeIn bg-white pb-20">
+    <div className="relative w-full h-[400px] flex items-center justify-center">
+      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${IMAGES.heroAmenities})` }}></div>
+      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="relative z-10 text-center text-white mt-10">
+        <div className="w-12 h-0.5 bg-white mx-auto mb-4"></div>
+        <h1 className="text-4xl font-bold uppercase tracking-wider drop-shadow-md mb-2">AMENITIES</h1>
+        <p className="text-sm font-light opacity-90 drop-shadow">Experience comfort and convenience at every turn</p>
+      </div>
+    </div>
+    
+    <section className="py-20 px-4 text-center">
+      <div className="max-w-5xl mx-auto">
+        <div className="w-8 h-px bg-gray-400 mx-auto mb-4"></div>
+        <h2 className="text-2xl font-bold mb-4 text-[#1c2834] uppercase tracking-widest">OUR AMENITIES</h2>
+        <p className="text-gray-500 text-sm mb-12 max-w-2xl mx-auto">
+          Enjoy modern facilities and thoughtful amenities designed to make every event seamless and comfortable.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            { title: "PRAYER HALL", img: IMAGES.amenityPrayer, icon: Building },
+            { title: "ATM MACHINE", img: IMAGES.amenityAtm, icon: Monitor },
+            { title: "PARKING SPOTS", img: IMAGES.amenityParking, icon: Car }
+          ].map((amenity, i) => (
+            <div key={i} className={`relative h-64 overflow-hidden shadow-sm group ${enterClass(i)}`} style={enterStyle(i)}>
+              <img src={amenity.img} alt={amenity.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${mediaRevealClass}`} style={enterStyle(i, 0.14)} />
+              <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-5 text-left">
+                <div className="w-8 h-8 rounded-full border border-white/50 flex items-center justify-center text-white mb-2">
+                  <amenity.icon size={14} />
+                </div>
+                <h3 className="font-bold text-white uppercase text-sm tracking-wide">{amenity.title}</h3>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section className="py-10 px-4 text-center">
+      <div className="max-w-5xl mx-auto">
+        <div className="w-8 h-px bg-gray-400 mx-auto mb-4"></div>
+        <h2 className="text-2xl font-bold mb-4 text-[#1c2834] uppercase tracking-widest">WHAT'S AROUND ICC</h2>
+        <p className="text-gray-500 text-sm mb-12 max-w-2xl mx-auto">
+          Explore nearby hotels, restaurants, and attractions that make every visit to ICC Ipoh more enjoyable.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {[
+            { title: "IPOH PARADE MALL", img: IMAGES.heroHome },
+            { title: "WEIL HOTEL", img: IMAGES.galleryCharity },
+            { title: "TOWER REGENCY HOTEL", img: IMAGES.heroContact },
+            { title: "IPOH CITY COUNCIL (MBI)", img: IMAGES.landscapeBanner },
+            { title: "DATARAN IPOH", img: IMAGES.heroFacilities },
+            { title: "GREENTOWN BUSINESS CENTRE", img: IMAGES.heroAbout }
+          ].map((place, i) => (
+            <div key={i} className={`relative h-56 overflow-hidden shadow-sm group ${enterClass(i)}`} style={enterStyle(i)}>
+              <img src={place.img} alt={place.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${mediaRevealClass}`} style={enterStyle(i, 0.14)} />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-5 text-left">
+                <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#1c2834]">
+                  <MapPin size={14} />
+                </div>
+                <h3 className="font-bold text-white uppercase text-xs tracking-wider">{place.title}</h3>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  </div>
+);
+
+const Events = () => {
+  const [activeTab, setActiveTab] = useState('upcoming');
+  return (
+    <div className="animate-fadeIn bg-[#f0f4f8] pb-32">
+      <div className="w-full h-[400px] bg-cover bg-center" style={{ backgroundImage: `url(${IMAGES.heroEvents})` }}></div>
+      
+      <section className="py-20 px-4 bg-white text-center shadow-sm">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold mb-6 text-[#1c2834] uppercase tracking-widest">OUR EVENTS JOURNEY</h2>
+          <p className="text-gray-500 text-sm mb-12">
+            Browse through upcoming activities and past highlights that showcase ICC Ipoh as a vibrant hub for every occasion.
+          </p>
+
+          <div className="flex justify-center items-center gap-8 mb-16">
+            <button 
+              className={`text-sm tracking-wider uppercase transition-all ${activeTab === 'upcoming' ? 'font-bold text-[#1c2834]' : 'font-medium text-gray-400 hover:text-gray-600'}`}
+              onClick={() => setActiveTab('upcoming')}
+            >
+              UPCOMING
+            </button>
+            <div className="w-px h-6 bg-gray-300"></div>
+            <button 
+              className={`text-sm tracking-wider uppercase transition-all ${activeTab === 'past' ? 'font-bold text-[#1c2834]' : 'font-medium text-gray-400 hover:text-gray-600'}`}
+              onClick={() => setActiveTab('past')}
+            >
+              PAST
+            </button>
+          </div>
+
+          <div className="py-10 text-gray-400 text-sm">
+            {activeTab === 'upcoming' ? "No upcoming events at the moment" : "Past events will be displayed here."}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+const Gallery = () => {
+  const [filter, setFilter] = useState('All Venues');
+  const filters = ['All Venues', 'Grand Ballroom', 'Exhibition Hall', 'Bougainvillea Room', 'Other Venue'];
+  
+  const images = [
+    { src: IMAGES.galleryCharity, title: 'Perak Wedding Expo 2024' },
+    { src: IMAGES.heroFacilities, title: 'Corporate Leadership Forum' },
+    { src: IMAGES.galleryExhibition, title: 'Art & Culture Exhibition' },
+    { src: IMAGES.featuredHome, title: 'Ipoh Business Convention 2024' },
+    { src: IMAGES.galleryBallroom, title: 'Grand Charity Gala Night' },
+    { src: IMAGES.galleryTech, title: 'International Tech Summit 2024' }
+  ];
+
+  return (
+    <div className="animate-fadeIn bg-white pb-20">
+      <div className="w-full h-[400px] bg-cover bg-center" style={{ backgroundImage: `url(${IMAGES.heroGallery})` }}></div>
+      
+      <section className="py-16 px-4 text-center">
+        <h2 className="text-2xl font-bold mb-4 text-[#1c2834] uppercase tracking-widest">HIGHLIGHTS OF ICC</h2>
+        <p className="text-gray-500 text-sm mb-10 max-w-2xl mx-auto">
+          Browse event highlights and venue snapshots that showcase the beauty and versatility of our spaces.
+        </p>
+
+        <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-3 mb-16">
+          {filters.map(f => (
+            <button 
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider border transition-all ${filter === f ? 'bg-[#1c2834] text-white border-[#1c2834]' : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'}`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+
+        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+          {images.map((img, i) => (
+            <div key={i} className={`group relative flex flex-col items-center ${enterClass(i)}`} style={enterStyle(i, 0.04)}>
+              <div className="w-full h-80 overflow-hidden shadow-md bg-gray-100">
+                <img src={img.src} alt={img.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ${mediaRevealClass}`} style={enterStyle(i, 0.12)} />
+              </div>
+              <div className="relative bg-white shadow-lg w-[85%] -mt-6 p-4 z-10 text-center font-bold text-xs text-[#1c2834] tracking-wide uppercase border border-gray-50">
+                {img.title}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center items-center gap-2 mt-20 text-xs font-bold text-gray-500">
+          <button className="px-3 py-2 bg-gray-50 rounded border border-gray-200 hover:bg-gray-100 mr-2">Previous</button>
+          <button className="w-8 h-8 rounded bg-[#1c2834] text-white flex items-center justify-center">1</button>
+          {[2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+            <button key={num} className="w-8 h-8 rounded border border-gray-200 flex items-center justify-center hover:bg-gray-50">{num}</button>
+          ))}
+          <button className="px-3 py-2 bg-gray-50 rounded border border-gray-200 hover:bg-gray-100 ml-2">Next</button>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+const Contact = () => (
+  <div className="animate-fadeIn bg-white">
+    <div className="relative w-full h-[400px] flex items-center justify-center">
+      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${IMAGES.heroContact})` }}></div>
+      <div className="absolute inset-0 bg-[#1c2834]/40"></div>
+      <div className="relative z-10 text-center text-white mt-10">
+        <h1 className="text-4xl md:text-5xl font-bold uppercase tracking-wider drop-shadow-md mb-4">Get In Touch</h1>
+        <p className="text-sm font-light opacity-90 drop-shadow max-w-xl mx-auto px-4 leading-relaxed">We're here to help make your event extraordinary. Reach out to us today!</p>
+      </div>
+    </div>
+    
+    <section className="py-20 px-4 bg-[#f9fafb] text-center">
+      <div className="max-w-5xl mx-auto">
+        <h2 className="text-2xl font-bold mb-4 text-[#1c2834] uppercase tracking-widest">Reach Us Anytime</h2>
+        <p className="text-gray-500 text-sm mb-12 max-w-2xl mx-auto">
+          Whether for bookings or general inquiries, our friendly team at ICC Ipoh is ready to assist you.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { icon: MapPin, title: "Our Location", detail: "Persiaran Bandaraya, Pusat Perdagangan Greentown, 30450 Ipoh, Perak" },
+            { icon: Phone, title: "Phone Number", detail: "05 - 220 0000" },
+            { icon: Mail, title: "Email Address", detail: "info@ipohconventioncentre.com" },
+            { icon: Clock, title: "Business Hours", detail: "Mon-Fri: 09:00-18:00\nSat: 09:00-13:00\nSun: Closed" }
+          ].map((info, i) => (
+            <div key={i} className="bg-white p-8 shadow-sm rounded border border-gray-50 flex flex-col items-center">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-[#4a7ba7] flex items-center justify-center mb-4">
+                <info.icon size={18} />
+              </div>
+              <h3 className="font-bold text-[#1c2834] text-sm mb-3 tracking-wide">{info.title}</h3>
+              <p className="text-gray-500 text-xs leading-relaxed whitespace-pre-line">{info.detail}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section className="py-20 px-4 bg-white text-center">
+      <div className="max-w-3xl mx-auto">
+        <h2 className="text-2xl font-bold mb-4 text-[#1c2834] uppercase tracking-widest">Send Us A Message</h2>
+        <p className="text-gray-500 text-sm mb-10">
+          Fill out the form below and our team will get back to you within 24 hours.
+        </p>
+
+        <div className="bg-white shadow-lg rounded-xl border border-gray-100 p-8 md:p-12 text-left">
+          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-xs font-bold text-[#1c2834] mb-2 tracking-wide">Full Name <span className="text-red-500">*</span></label>
+                <input type="text" placeholder="Enter your name" className="w-full p-3 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7]" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-[#1c2834] mb-2 tracking-wide">Email Address <span className="text-red-500">*</span></label>
+                <input type="email" placeholder="Enter your email" className="w-full p-3 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7]" />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-xs font-bold text-[#1c2834] mb-2 tracking-wide">Phone Number</label>
+                <input type="tel" placeholder="Enter your phone" className="w-full p-3 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7]" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-[#1c2834] mb-2 tracking-wide">Event Type <span className="text-red-500">*</span></label>
+                <select className="w-full p-3 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] text-gray-500 bg-white">
+                  <option>Select event type</option>
+                  <option>Conference</option>
+                  <option>Exhibition</option>
+                  <option>Wedding</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-[#1c2834] mb-2 tracking-wide">Preferred Event Date</label>
+              <input type="date" className="w-full p-3 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] text-gray-500" />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-[#1c2834] mb-2 tracking-wide">Message <span className="text-red-500">*</span></label>
+              <textarea rows="4" placeholder="Tell us about your event..." className="w-full p-3 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7]"></textarea>
+            </div>
+            <button type="submit" className="w-full bg-[#4a7ba7] hover:bg-[#3d5f8a] text-white py-4 rounded font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-colors">
+              <Send size={16} /> Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section className="py-16 bg-white text-center">
+      <h2 className="text-xl font-bold mb-4 text-[#1c2834]">Connect With Us</h2>
+      <p className="text-gray-500 text-xs mb-8">Follow us on social media for updates and news.</p>
+      <div className="flex justify-center gap-4">
+        {[Facebook, Instagram, Twitter, Linkedin].map((Icon, i) => (
+          <a key={i} href="#" className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-[#4a7ba7] hover:bg-[#4a7ba7] hover:text-white transition-colors">
+            <Icon size={16} />
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section className="relative h-[450px] w-full bg-cover bg-center" style={{ backgroundImage: `url(${IMAGES.mapPlaceholder})` }}>
+      <div className="absolute inset-0 bg-white/30 backdrop-blur-[1px]"></div>
+      <div className="absolute bottom-10 left-4 md:left-24 bg-white p-6 rounded shadow-xl max-w-[320px] z-10 border border-gray-50">
+        <h4 className="flex items-center gap-2 font-bold text-[#1c2834] text-sm mb-3 tracking-wide">
+          <MapPin size={16} /> Visit Us
+        </h4>
+        <p className="text-xs text-gray-500 mb-6 leading-relaxed">
+          Persiaran Bandaraya, Pusat Perdagangan Greentown, 30450 Ipoh, Perak
+        </p>
+        <button className="bg-[#4a7ba7] hover:bg-[#3d5f8a] text-white text-xs px-5 py-2.5 rounded font-bold flex items-center gap-2 transition-colors">
+          <MapPin size={14} /> Get directions
+        </button>
+      </div>
+    </section>
+  </div>
+);
+
+// --- Admin Components ---
+
+const AdminLogin = ({ onLogin, onBack }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (username === 'admin' && password === 'icc2025') {
+      onLogin();
+    } else {
+      setError('Invalid username or password.');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#4a5f77] flex flex-col items-center justify-center p-4 relative" style={{ backgroundImage: "radial-gradient(#ffffff22 1px, transparent 1px)", backgroundSize: "24px 24px" }}>
+      <div className="w-full max-w-[400px] bg-white rounded-xl shadow-2xl overflow-hidden relative z-10">
+        {/* Header */}
+        <div className="bg-gradient-to-b from-[#314155] to-[#1c2834] p-8 flex flex-col items-center text-white">
+          <div className="w-12 h-12 rounded-full border-2 border-white/30 flex items-center justify-center mb-4">
+            <Shield size={24} className="text-white" />
+          </div>
+          <h2 className="text-2xl font-bold tracking-wide">Admin Login</h2>
+          <p className="text-sm text-gray-300 mt-1">Ipoh Convention Centre</p>
+        </div>
+
+        {/* Form */}
+        <div className="p-8">
+          <form onSubmit={handleLogin} className="space-y-5">
+            {error && <div className="p-3 bg-red-50 text-red-600 text-xs rounded text-center font-semibold">{error}</div>}
+            
+            <div>
+              <label className="block text-xs font-bold text-[#1c2834] mb-2">Username</label>
+              <div className="relative">
+                <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input 
+                  type="text" 
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Enter your username" 
+                  className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] focus:bg-white transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-[#1c2834] mb-2">Password</label>
+              <div className="relative">
+                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input 
+                  type="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password" 
+                  className="w-full pl-9 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] focus:bg-white transition-colors"
+                />
+                <EyeOff size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer" />
+              </div>
+            </div>
+
+            <button type="submit" className="w-full bg-[#1c2834] hover:bg-[#2c3d4f] text-white py-3 rounded font-bold text-sm tracking-wide transition-colors mt-2">
+              Sign In
+            </button>
+          </form>
+
+          <div className="mt-6 p-4 bg-[#f0f4f8] rounded border border-blue-100 text-center">
+            <p className="text-xs text-[#4a7ba7] font-semibold mb-1">Default Credentials:</p>
+            <p className="text-xs text-[#1c2834]">Username: admin | Password: icc2025</p>
+          </div>
+
+          <div className="mt-6 text-center">
+            <button onClick={onBack} className="text-gray-500 hover:text-[#1c2834] text-xs font-bold transition-colors">
+              &larr; Back to Home
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <p className="mt-8 text-white/50 text-xs text-center z-10 font-medium">
+        For security, sessions expire after 24 hours
+      </p>
+    </div>
+  );
+};
+
+// --- Mock Data for Admin Panel ---
+const mockBookings = [
+  { id: 1, date: "Jan 24, 2026", time: "10:30 - 18:00", room: "Section Hall", venue: "Exhibition Hall", roomColor: "bg-red-500", client: "Faqhrul", phone: "0174003776", email: "client@gmail.com", status: "CONFIRMED" },
+  { id: 2, date: "Nov 7, 2025", time: "12:40 - 22:40", room: "Sections 1, 2 & 3", venue: "Grand Ballroom", roomColor: "bg-blue-500", client: "Dhurga", phone: "0123456789", email: "dhurga@gmail.com", status: "CONFIRMED" }
+];
+
+const mockPastEvents = [
+  { title: "Perak Wedding Expo 2024", date: "8/22/2024", venue: "Exhibition Hall", attendees: "1200 attendees", desc: "The region's premier wedding showcase featuring top vendors, stunning bridal...", photos: 0, img: IMAGES.galleryCharity },
+  { title: "Corporate Leadership Forum", date: "10/5/2024", venue: "Bougainvillea Room", attendees: "180 attendees", desc: "An exclusive gathering of C-suite executives and business leaders discussing strategic...", photos: 0, img: IMAGES.heroFacilities },
+  { title: "Art & Culture Exhibition", date: "7/18/2024", venue: "Exhibition Hall", attendees: "850 attendees", desc: "A vibrant celebration of Malaysian art and culture featuring contemporary artists...", photos: 0, img: IMAGES.galleryExhibition },
+  { title: "Ipoh Business Convention 2024", date: "6/12/2024", venue: "Grand Ballroom", attendees: "650 attendees", desc: "The largest business networking event in Perak, connecting entrepreneurs, investors, and...", photos: 0, img: IMAGES.featuredHome },
+  { title: "Grand Charity Gala Night", date: "11/8/2024", venue: "Grand Ballroom", attendees: "300 attendees", desc: "An elegant fundraising gala supporting local education initiatives. The evening featured live...", photos: 0, img: IMAGES.galleryBallroom },
+  { title: "International Tech Summit 2024", date: "9/15/2024", venue: "Grand Ballroom", attendees: "520 attendees", desc: "A groundbreaking technology conference featuring industry leaders, innovative startups...", photos: 1, img: IMAGES.galleryTech },
+  { title: "Camping Event", date: "6/5/2024", venue: "Grand Ballroom", attendees: "5000 attendees", desc: "Camping Event Final Days...", photos: 2, img: IMAGES.heroHome },
+  { title: "International Tech Summit 2025", date: "3/15/2025", venue: "Grand Ballroom", attendees: "0 attendees", desc: "Join industry leaders and innovators for the biggest technology summit in Southeast Asia...", photos: 0, img: IMAGES.heroAbout },
+  { title: "Perak Food & Beverage Expo 2025", date: "4/20/2025", venue: "Exhibition Hall", attendees: "0 attendees", desc: "Discover the finest culinary delights from Perak and beyond. This expo showcases local food...", photos: 0, img: IMAGES.heroAmenities }
+];
+
+const AdminPanel = ({ onLogout, onBack }) => {
+  const [activeAdminTab, setActiveAdminTab] = useState('Master Calendar');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpcomingEventModalOpen, setIsUpcomingEventModalOpen] = useState(false);
+  const [venueCategory, setVenueCategory] = useState('');
+
+  // Renders the dynamic room selection field based on Venue Category
+  const renderRoomSelection = () => {
+    switch (venueCategory) {
+      case 'Grand Ballroom':
+        return (
+          <div className="bg-gray-50 p-4 rounded border border-gray-200 mt-2">
+            <p className="text-xs text-gray-500 mb-3">Book individual sections or the entire ballroom (31,000 sq ft combined)</p>
+            <div className="space-y-2">
+              {[1, 2, 3].map(num => (
+                <label key={num} className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded cursor-pointer hover:border-[#4a7ba7] transition-colors">
+                  <input type="checkbox" className="mt-1" />
+                  <div>
+                    <p className="text-sm font-bold text-[#1c2834]">Section {num}</p>
+                    <p className="text-xs text-gray-500">400-600 guests | 10,300 sq ft</p>
+                  </div>
+                </label>
+              ))}
+            </div>
+            <p className="text-[10px] text-gray-400 mt-3 font-semibold uppercase tracking-wide">Features: Mobile stage, Soundproof, Elegant décor, Premium lighting</p>
+          </div>
+        );
+      case 'Exhibition Hall':
+        return (
+          <div className="bg-gray-50 p-4 rounded border border-gray-200 mt-2">
+            <p className="text-xs text-gray-500 mb-3">Ideal for large exhibitions, trade shows, and product launches</p>
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-bold text-blue-900">Exhibition Hall</p>
+                <Check size={16} className="text-blue-500" />
+              </div>
+              <p className="text-xs text-blue-700 mt-1">2,000-3,000 guests | 50,000 sq ft</p>
+            </div>
+            <p className="text-[10px] text-gray-400 mt-3 font-semibold uppercase tracking-wide">Key Features: Flexible layout, High ceilings, Loading bay access, Exhibition booths</p>
+          </div>
+        );
+      case 'Bougainvillea Room':
+        return (
+          <div className="bg-gray-50 p-4 rounded border border-gray-200 mt-2">
+            <p className="text-xs text-gray-500 mb-3">All Bougainvillea rooms have identical capacity and features</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {[1, 2, 3, 4, 5, 6].map(num => (
+                <label key={num} className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded cursor-pointer hover:border-[#4a7ba7] transition-colors">
+                  <input type="radio" name="bougainvillea_room" className="mt-1" />
+                  <div>
+                    <p className="text-sm font-bold text-[#1c2834]">Room {num}</p>
+                    <p className="text-xs text-gray-500">50-80 guests | 1,200 sq ft</p>
+                  </div>
+                </label>
+              ))}
+            </div>
+            <p className="text-[10px] text-gray-400 mt-3 font-semibold uppercase tracking-wide">Room Features: Intimate setting, Natural lighting, Projector & screen, Wi-Fi</p>
+          </div>
+        );
+      case 'Town Hall':
+        return (
+          <div className="bg-gray-50 p-4 rounded border border-gray-200 mt-2">
+            <p className="text-xs text-gray-500 mb-3">Main Hall and Level 1 serve different purposes and capacities</p>
+            <div className="space-y-2">
+              <label className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded cursor-pointer hover:border-[#4a7ba7] transition-colors">
+                <input type="radio" name="town_hall_area" className="mt-1" />
+                <div>
+                  <p className="text-sm font-bold text-[#1c2834]">Main Hall</p>
+                  <p className="text-xs text-gray-500 mb-1">800-1,000 guests | 8,500 sq ft</p>
+                  <p className="text-[10px] text-gray-400 font-semibold uppercase">Features: Stage area, Audio system, Theatre seating, Green room</p>
+                </div>
+              </label>
+              <label className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded cursor-pointer hover:border-[#4a7ba7] transition-colors">
+                <input type="radio" name="town_hall_area" className="mt-1" />
+                <div>
+                  <p className="text-sm font-bold text-[#1c2834]">Level 1</p>
+                  <p className="text-xs text-gray-500 mb-1">200-300 guests | 3,500 sq ft</p>
+                  <p className="text-[10px] text-gray-400 font-semibold uppercase">Features: Breakout space, Lounge seating, Catering area, AV equipment</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        );
+      default:
+        return <div className="text-sm text-gray-400 italic p-4 bg-gray-50 rounded border border-gray-200 mt-2">Please select a venue category first to view available rooms.</div>;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50/50">
+      <div className="max-w-[1200px] mx-auto p-6 md:p-10 relative">
+        
+        {/* Header Area */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+          <div>
+            <h1 className="text-3xl font-bold text-[#1c2834] tracking-tight">Admin Panel</h1>
+            <p className="text-gray-500 text-sm mt-1">Manage venue bookings and reservations</p>
+          </div>
+          <div className="flex items-center gap-3">
+            <button onClick={onBack} className="flex items-center gap-2 px-4 py-2 border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 rounded text-xs font-bold transition-colors shadow-sm">
+              <HomeIcon size={14} /> Back to Site
+            </button>
+            <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-[#314155] hover:bg-[#1c2834] text-white rounded text-xs font-bold transition-colors shadow-sm">
+              <Plus size={14} /> New Booking
+            </button>
+            <button onClick={onLogout} className="flex items-center gap-2 px-4 py-2 border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 rounded text-xs font-bold transition-colors ml-2 shadow-sm">
+              <LogOut size={14} /> Logout
+            </button>
+          </div>
+        </div>
+
+        {/* Search & Tabs */}
+        <div className="mb-10">
+          <div className="relative max-w-md mb-8">
+            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input 
+              type="text" 
+              placeholder="Search bookings..." 
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-100 rounded text-sm focus:outline-none focus:ring-1 focus:ring-gray-200 shadow-sm"
+            />
+          </div>
+
+          <div className="inline-flex border border-gray-200 rounded-full p-1 bg-white shadow-sm">
+            {['Master Calendar', 'Bookings', 'Upcoming Events', 'Past Events'].map(tab => (
+              <button 
+                key={tab}
+                onClick={() => setActiveAdminTab(tab)}
+                className={`px-6 py-2 rounded-full text-xs font-bold transition-colors ${activeAdminTab === tab ? 'bg-[#314155] text-white shadow-sm' : 'text-gray-600 hover:bg-gray-50'}`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Tab Content Wrappers */}
+
+        {/* --- Master Calendar Tab --- */}
+        {activeAdminTab === 'Master Calendar' && (
+          <div>
+            <h2 className="text-2xl font-bold text-[#1c2834]">Master Calendar</h2>
+            <p className="text-gray-500 text-sm mt-1 mb-8">View all bookings, upcoming events, and past events in one centralized calendar</p>
+
+            <div className="border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden">
+              
+              {/* Calendar Controls */}
+              <div className="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div className="flex items-center gap-4">
+                  <h3 className="text-xl font-bold text-[#1c2834]">April 2026</h3>
+                  <button className="px-3 py-1 border border-gray-200 text-gray-600 rounded text-xs font-bold hover:bg-gray-50">Today</button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded text-gray-600 hover:bg-gray-50"><ChevronLeft size={16} /></button>
+                  <button className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded text-gray-600 hover:bg-gray-50"><ChevronRight size={16} /></button>
+                </div>
+              </div>
+
+              {/* Filter Pills */}
+              <div className="px-6 py-4 border-b border-gray-100 flex flex-wrap gap-3">
+                <button className="px-4 py-1.5 bg-[#1c2834] text-white rounded-full text-xs font-bold flex items-center gap-2 shadow-sm">
+                  All Events
+                </button>
+                <button className="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-blue-100 transition-colors">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div> Bookings (5)
+                </button>
+                <button className="px-4 py-1.5 bg-orange-50 text-orange-600 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-orange-100 transition-colors">
+                  <div className="w-2 h-2 rounded-full bg-orange-500"></div> Upcoming Events (0)
+                </button>
+                <button className="px-4 py-1.5 bg-green-50 text-green-600 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-green-100 transition-colors">
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div> Past Events (59)
+                </button>
+              </div>
+
+              {/* Grid Header */}
+              <div className="grid grid-cols-7 text-center py-4 border-b border-gray-100">
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                  <div key={day} className="text-xs font-bold text-gray-500 uppercase tracking-wide">{day}</div>
+                ))}
+              </div>
+
+              {/* Grid Body */}
+              <div className="p-6">
+                <div className="grid grid-cols-7 grid-rows-5 gap-3">
+                  {/* Padding */}
+                  <div className="h-28 rounded-lg border border-transparent"></div>
+                  <div className="h-28 rounded-lg border border-transparent"></div>
+                  <div className="h-28 rounded-lg border border-transparent"></div>
+                  
+                  {/* Days */}
+                  {[...Array(30)].map((_, i) => {
+                    const day = i + 1;
+                    const isToday = day === 21;
+                    return (
+                      <div key={day} className={`h-28 rounded-lg border p-2 flex flex-col ${isToday ? 'border-gray-400 bg-gray-50 shadow-sm' : 'border-gray-100 hover:border-gray-300 transition-colors cursor-pointer'}`}>
+                        <span className={`text-xs font-bold ${isToday ? 'text-[#1c2834]' : 'text-gray-500'}`}>{day}</span>
+                      </div>
+                    );
+                  })}
+                  
+                  {/* Padding */}
+                  <div className="h-28 rounded-lg border border-transparent"></div>
+                  <div className="h-28 rounded-lg border border-transparent"></div>
+                </div>
+              </div>
+
+              {/* Legend */}
+              <div className="p-6 bg-gray-50 border-t border-gray-100 flex flex-wrap gap-12">
+                <div>
+                  <p className="text-xs font-bold text-[#1c2834] mb-3">Legend</p>
+                  <div className="flex gap-8">
+                    <div className="flex items-center gap-2 text-xs text-gray-600"><div className="w-3 h-3 rounded bg-blue-500"></div> Bookings</div>
+                    <div className="flex items-center gap-2 text-xs text-gray-600"><div className="w-3 h-3 rounded bg-orange-500"></div> Upcoming Events</div>
+                    <div className="flex items-center gap-2 text-xs text-gray-600"><div className="w-3 h-3 rounded bg-green-500"></div> Past Events</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* --- Bookings Tab --- */}
+        {activeAdminTab === 'Bookings' && (
+          <div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+                <h3 className="text-xs text-gray-500 font-semibold tracking-wide">Total Bookings</h3>
+                <p className="text-4xl font-bold text-[#1c2834]">5</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+                <h3 className="text-xs text-gray-500 font-semibold tracking-wide">Confirmed</h3>
+                <p className="text-4xl font-bold text-green-500">5</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+                <h3 className="text-xs text-gray-500 font-semibold tracking-wide">Pending</h3>
+                <p className="text-4xl font-bold text-orange-500">0</p>
+              </div>
+              <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+                <h3 className="text-xs text-gray-500 font-semibold tracking-wide">Cancelled</h3>
+                <p className="text-4xl font-bold text-red-500">0</p>
+              </div>
+            </div>
+
+            <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm whitespace-nowrap">
+                  <thead className="bg-gray-50 text-gray-500 font-bold text-xs border-b border-gray-100">
+                    <tr>
+                      <th className="px-6 py-4">Date</th>
+                      <th className="px-6 py-4">Venue / Room</th>
+                      <th className="px-6 py-4">Client</th>
+                      <th className="px-6 py-4">Contact</th>
+                      <th className="px-6 py-4">Status</th>
+                      <th className="px-6 py-4 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {mockBookings.map(b => (
+                      <tr key={b.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-5">
+                          <div className="text-[#1c2834] font-medium">{b.date}</div>
+                          <div className="text-gray-500 text-xs mt-1">{b.time}</div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full ${b.roomColor}`}></div>
+                            <span className="text-[#1c2834] font-bold text-xs">{b.room}</span>
+                          </div>
+                          <div className="text-gray-500 text-xs mt-1 ml-4">{b.venue}</div>
+                        </td>
+                        <td className="px-6 py-5 text-[#1c2834] font-medium">{b.client}</td>
+                        <td className="px-6 py-5">
+                          <div className="flex items-center gap-2 text-gray-500 text-xs mb-1.5">
+                            <Phone size={12} /> {b.phone}
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-500 text-xs">
+                            <Mail size={12} /> {b.email}
+                          </div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <span className="px-3 py-1 bg-green-50 text-green-600 border border-green-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                            {b.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex items-center justify-center gap-4 text-gray-500">
+                            <button className="hover:text-[#1c2834] transition-colors"><Pencil size={16} /></button>
+                            <button className="hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* --- Upcoming Events Tab --- */}
+        {activeAdminTab === 'Upcoming Events' && (
+          <div>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div>
+                <h2 className="text-2xl font-bold text-[#1c2834]">Upcoming Events</h2>
+                <p className="text-gray-500 text-sm mt-1">Manage upcoming events displayed on the website</p>
+              </div>
+              <button onClick={() => setIsUpcomingEventModalOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-[#314155] hover:bg-[#1c2834] text-white rounded text-xs font-bold transition-colors shadow-sm">
+                <Plus size={14} /> Add Upcoming Event
+              </button>
+            </div>
+            
+            <div className="border border-gray-200 rounded-xl bg-gray-50/80 h-64 flex flex-col items-center justify-center text-gray-400 text-sm">
+               <CalendarIcon size={32} className="mb-3 text-gray-300" />
+               List of upcoming events will appear here.
+            </div>
+          </div>
+        )}
+
+        {/* --- Past Events Tab --- */}
+        {activeAdminTab === 'Past Events' && (
+          <div>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+              <div>
+                <h2 className="text-2xl font-bold text-[#1c2834]">Past Events Gallery</h2>
+                <p className="text-gray-500 text-sm mt-1">Manage past events displayed in the gallery</p>
+              </div>
+              <button className="flex items-center gap-2 px-4 py-2 bg-[#314155] hover:bg-[#1c2834] text-white rounded text-xs font-bold transition-colors shadow-sm">
+                <Plus size={14} /> Add Past Event
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {mockPastEvents.map((event, idx) => (
+                <div key={idx} className={`bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm flex flex-col group hover:shadow-md transition-shadow ${enterClass(idx)}`} style={enterStyle(idx, 0.06)}>
+                  <div className="h-48 overflow-hidden">
+                    <img src={event.img} alt={event.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${mediaRevealClass}`} style={enterStyle(idx, 0.14)} />
+                  </div>
+                  <div className="p-5 flex-grow flex flex-col">
+                    <h3 className="text-[#1c2834] font-bold text-sm mb-3 line-clamp-1">{event.title}</h3>
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <CalendarIcon size={14} className="text-[#4a7ba7]" /> {event.date}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <MapPin size={14} className="text-red-400" /> {event.venue}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Users size={14} className="text-[#1c2834]" /> {event.attendees}
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500 line-clamp-2 mb-4 flex-grow leading-relaxed">{event.desc}</p>
+                    <div className="flex items-center gap-2 text-xs text-gray-500 font-medium pb-4 border-b border-gray-100">
+                      <ImageIcon size={14} /> {event.photos} photos in gallery
+                    </div>
+                    <div className="flex justify-between pt-4 text-[11px] font-bold tracking-wide uppercase">
+                      <button className="flex items-center gap-1.5 text-gray-600 hover:text-[#1c2834] transition-colors"><ImageIcon size={14}/> Gallery</button>
+                      <button className="flex items-center gap-1.5 text-gray-600 hover:text-[#1c2834] transition-colors"><Pencil size={14}/> Edit</button>
+                      <button className="flex items-center gap-1.5 text-red-500 hover:text-red-700 transition-colors"><Trash2 size={14}/> Delete</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </div>
+
+      {/* --- Add Upcoming Event Modal Overlay --- */}
+      {isUpcomingEventModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg my-auto flex flex-col max-h-[90vh]">
+            
+            <div className="flex justify-between items-center p-6 border-b border-gray-100 shrink-0">
+              <h2 className="text-xl font-bold text-[#1c2834]">Add Upcoming Event</h2>
+              <button onClick={() => setIsUpcomingEventModalOpen(false)} className="text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-full p-2 transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto">
+              <form className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#1c2834] mb-1.5">Event Title *</label>
+                  <input type="text" placeholder="International Tech Summit 2025" className="w-full p-2.5 bg-gray-50 border border-transparent rounded text-sm focus:outline-none focus:border-gray-200 focus:bg-white transition-colors" />
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-bold text-[#1c2834] mb-1.5">Event Date *</label>
+                  <input type="date" className="w-full p-2.5 bg-gray-50 border border-transparent rounded text-sm focus:outline-none focus:border-gray-200 focus:bg-white transition-colors text-gray-500" />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#1c2834] mb-1.5">Event Time</label>
+                  <input type="text" placeholder="9:00 AM - 6:00 PM" className="w-full p-2.5 bg-gray-50 border border-transparent rounded text-sm focus:outline-none focus:border-gray-200 focus:bg-white transition-colors" />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#1c2834] mb-1.5">Venue *</label>
+                  <div className="relative">
+                    <select className="w-full p-2.5 bg-gray-50 border border-transparent rounded text-sm focus:outline-none focus:border-gray-200 focus:bg-white transition-colors appearance-none text-[#1c2834]">
+                      <option>Grand Ballroom</option>
+                      <option>Exhibition Hall</option>
+                      <option>Bougainvillea Room</option>
+                      <option>Town Hall</option>
+                    </select>
+                    <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#1c2834] mb-1.5">Category</label>
+                  <input type="text" placeholder="Technology, Food & Beverage, etc." className="w-full p-2.5 bg-gray-50 border border-transparent rounded text-sm focus:outline-none focus:border-gray-200 focus:bg-white transition-colors" />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#1c2834] mb-1.5">Description *</label>
+                  <textarea rows="3" placeholder="Brief description of the event" className="w-full p-2.5 bg-gray-50 border border-transparent rounded text-sm focus:outline-none focus:border-gray-200 focus:bg-white transition-colors"></textarea>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#1c2834] mb-1.5">Event Poster *</label>
+                  <div className="w-full p-2.5 bg-gray-50 border border-transparent rounded text-sm flex items-center gap-3">
+                    <button type="button" className="bg-white border border-gray-200 text-[#1c2834] px-4 py-1.5 rounded text-xs font-bold shadow-sm hover:bg-gray-100 transition-colors">Choose File</button>
+                    <span className="text-gray-500 text-xs">No file chosen</span>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div className="p-6 pt-0 shrink-0 flex items-center gap-3">
+              <button className="flex-1 py-3 bg-[#314155] hover:bg-[#1c2834] text-white rounded text-sm font-bold transition-colors shadow-sm tracking-wide">
+                Create Event
+              </button>
+              <button onClick={() => setIsUpcomingEventModalOpen(false)} className="px-6 py-3 border border-gray-200 text-gray-700 bg-white hover:bg-gray-50 rounded text-sm font-bold transition-colors shadow-sm">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- New Booking Modal Overlay (Existing) --- */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-3xl my-auto flex flex-col max-h-[90vh]">
+            
+            {/* Modal Header */}
+            <div className="flex justify-between items-center p-6 border-b border-gray-100 shrink-0">
+              <div>
+                <h2 className="text-xl font-bold text-[#1c2834]">Create New Booking</h2>
+                <p className="text-xs text-gray-500 mt-1">Fill in the details to block out a venue</p>
+              </div>
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-full p-2 transition-colors">
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto">
+              <form className="space-y-8">
+                
+                {/* Date and Time Group */}
+                <div>
+                  <h3 className="text-sm font-bold text-[#1c2834] border-b border-gray-100 pb-2 mb-4">Date & Time</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-600 mb-2">Date</label>
+                      <input type="date" className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] focus:bg-white transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-600 mb-2">Start Time</label>
+                      <input type="time" defaultValue="09:00" className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] focus:bg-white transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-600 mb-2">End Time</label>
+                      <input type="time" defaultValue="17:00" className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] focus:bg-white transition-colors" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Venue Selection Group */}
+                <div>
+                  <h3 className="text-sm font-bold text-[#1c2834] border-b border-gray-100 pb-2 mb-4">Venue Details</h3>
+                  <div className="mb-4">
+                    <label className="block text-xs font-bold text-gray-600 mb-2">Venue Category</label>
+                    <div className="relative">
+                      <select 
+                        value={venueCategory} 
+                        onChange={(e) => setVenueCategory(e.target.value)}
+                        className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] focus:bg-white transition-colors appearance-none"
+                      >
+                        <option value="">Select a venue category...</option>
+                        <option value="Grand Ballroom">Grand Ballroom</option>
+                        <option value="Exhibition Hall">Exhibition Hall</option>
+                        <option value="Bougainvillea Room">Bougainvillea Room</option>
+                        <option value="Town Hall">Town Hall</option>
+                      </select>
+                      <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-xs font-bold text-gray-600 mb-2">Room Selection</label>
+                    {renderRoomSelection()}
+                  </div>
+                </div>
+
+                {/* Client Information Group */}
+                <div>
+                  <h3 className="text-sm font-bold text-[#1c2834] border-b border-gray-100 pb-2 mb-4">Client Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-600 mb-2">Client Name</label>
+                      <input type="text" placeholder="John Doe" className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] focus:bg-white transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-600 mb-2">Client Phone</label>
+                      <input type="tel" placeholder="+60 12-345 6789" className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] focus:bg-white transition-colors" />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-600 mb-2">Client Email</label>
+                      <input type="email" placeholder="john@example.com" className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] focus:bg-white transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-600 mb-2">Status</label>
+                      <div className="relative">
+                        <select className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] focus:bg-white transition-colors appearance-none font-medium text-[#1c2834]">
+                          <option value="Pending">Pending</option>
+                          <option value="Confirmed">Confirmed</option>
+                          <option value="Cancelled">Cancelled</option>
+                        </select>
+                        <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional Information Group */}
+                <div>
+                  <h3 className="text-sm font-bold text-[#1c2834] border-b border-gray-100 pb-2 mb-4">Additional Information</h3>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-600 mb-2">Notes</label>
+                    <textarea rows="3" placeholder="Additional information..." className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded text-sm focus:outline-none focus:border-[#4a7ba7] focus:bg-white transition-colors"></textarea>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-6 border-t border-gray-100 bg-gray-50 shrink-0 flex justify-end gap-3 rounded-b-xl">
+              <button onClick={() => setIsModalOpen(false)} className="px-6 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 rounded text-sm font-bold transition-colors shadow-sm">
+                Cancel
+              </button>
+              <button className="px-6 py-2 bg-[#1c2834] hover:bg-[#2c3d4f] text-white rounded text-sm font-bold transition-colors shadow-sm">
+                Create Booking
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+};
+
+// --- Main App Component ---
+
+function App() {
+  const [currentPage, setCurrentPage] = useState('home');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+
+  useEffect(() => {
+    let cleanup = () => {};
+    const frame = window.requestAnimationFrame(() => {
+      cleanup = setupScrollReveal();
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      cleanup();
+    };
+  }, [currentPage, isAdminAuthenticated]);
+  
+  const navLinks = [
+    { id: 'home', label: 'HOME' },
+    { id: 'about', label: 'ABOUT US' },
+    { id: 'facilities', label: 'FACILITIES' },
+    { id: 'amenities', label: 'AMENITIES' },
+    { id: 'events', label: 'EVENTS' },
+    { id: 'gallery', label: 'GALLERY' },
+    { id: 'contact', label: 'CONTACT US' },
+  ];
+
+  const navigate = (id) => {
+    setCurrentPage(id);
+    setMobileMenuOpen(false);
+    window.scrollTo(0, 0);
+  };
+
+  const renderPage = () => {
+    switch(currentPage) {
+      case 'home': return <Home setPage={navigate} />;
+      case 'about': return <About />;
+      case 'facilities': return <Facilities />;
+      case 'amenities': return <Amenities />;
+      case 'events': return <Events />;
+      case 'gallery': return <Gallery />;
+      case 'contact': return <Contact />;
+      case 'admin':
+        return isAdminAuthenticated ? 
+          <AdminPanel onLogout={() => { setIsAdminAuthenticated(false); navigate('home'); }} onBack={() => navigate('home')} /> : 
+          <AdminLogin onLogin={() => setIsAdminAuthenticated(true)} onBack={() => navigate('home')} />;
+      default: return <Home setPage={navigate} />;
+    }
+  };
+
+  // If in admin mode, render exclusively the admin tools (bypass public layout)
+  if (currentPage === 'admin') {
+    return (
+      <main className="flex-grow font-sans text-[#333333]">
+        {renderPage()}
+      </main>
+    );
+  }
+
+  return (
+    <div className="font-sans text-[#333333] min-h-screen flex flex-col bg-white">
+      
+      {/* Header */}
+      <header className="bg-white text-[#1c2834] sticky top-0 z-50 shadow-sm border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+          
+          {/* Logo Section */}
+          <div className="flex items-center gap-4 cursor-pointer" onClick={() => navigate('home')}>
+            <div className="w-12 h-12 bg-[#1c2834] rounded flex items-center justify-center text-white font-bold text-xl tracking-tighter">
+              ICC
+            </div>
+            <div className="hidden sm:block leading-none border-l-2 border-gray-200 pl-4 py-1">
+              <div className="font-bold text-sm tracking-widest text-[#1c2834]">IPOH CONVENTION</div>
+              <div className="font-light tracking-[0.2em] text-xs text-gray-500 mt-1">CENTRE</div>
+            </div>
+          </div>
+
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex gap-6 text-xs font-bold tracking-widest uppercase items-center">
+            {navLinks.map(link => (
+              <button 
+                key={link.id} 
+                onClick={() => navigate(link.id)}
+                className={`hover:text-[#4a7ba7] transition-colors py-2 relative ${currentPage === link.id ? 'text-[#1c2834]' : 'text-gray-500'}`}
+              >
+                {link.label}
+                {currentPage === link.id && (
+                  <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#1c2834]"></span>
+                )}
+              </button>
+            ))}
+          </nav>
+
+          {/* Right Controls */}
+          <div className="flex items-center gap-4 text-gray-500">
+            <div className="hidden sm:flex items-center gap-1 border border-gray-200 rounded px-3 py-1.5 text-xs font-bold cursor-pointer hover:bg-gray-50">
+              <Globe size={14} /> EN <ChevronDown size={14} className="ml-1" />
+            </div>
+            <button className="hidden sm:flex items-center justify-center w-8 h-8 rounded border border-gray-200 hover:bg-gray-50">
+              <Accessibility size={16} />
+            </button>
+            
+            {/* Mobile Menu Toggle */}
+            <button className="lg:hidden p-2 text-[#1c2834]" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Nav Dropdown */}
+        {mobileMenuOpen && (
+          <nav className="lg:hidden bg-white border-b shadow-lg absolute w-full left-0 top-full">
+            <ul className="flex flex-col">
+              {navLinks.map(link => (
+                <li key={link.id}>
+                  <button 
+                    onClick={() => navigate(link.id)}
+                    className={`w-full text-left px-6 py-4 border-b border-gray-50 text-sm font-bold uppercase tracking-wide ${currentPage === link.id ? 'bg-gray-50 text-[#1c2834]' : 'text-gray-500'}`}
+                  >
+                    {link.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-grow">
+        {renderPage()}
+      </main>
+
+      {/* Footer */}
+      <footer className="relative text-white pt-16 pb-6" style={{ backgroundColor: COLORS.footerBg }}>
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 border-b border-white/10 pb-12 mb-6">
+          
+          {/* Column 1: Brand & Socials */}
+          <div className="col-span-1">
+            <div className="flex flex-col items-center md:items-start mb-6">
+              <div className="w-14 h-14 border border-white/30 rounded flex items-center justify-center text-white font-bold text-2xl tracking-tighter mb-4 opacity-90">
+                ICC
+              </div>
+              <p className="text-sm font-semibold tracking-widest text-center md:text-left text-white/90">IPOH CONVENTION CENTRE</p>
+            </div>
+            <p className="text-gray-400 text-xs mb-6 max-w-xs text-center md:text-left leading-relaxed">
+              Premium venue spaces in the heart of Perak offering world-class facilities and unmatched convenience.
+            </p>
+            <div className="flex justify-center md:justify-start gap-3">
+              {[Facebook, Twitter, Instagram, Linkedin, Youtube].map((Icon, idx) => (
+                <a key={idx} href="#" className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-white hover:text-[#2c3543] transition-colors">
+                  <Icon size={14} />
+                </a>
+              ))}
+            </div>
+          </div>
+          
+          {/* Column 2: Quick Links */}
+          <div className="col-span-1 text-center md:text-left">
+            <h4 className="font-bold text-sm mb-6 tracking-wider uppercase text-white/90">QUICK LINKS</h4>
+            <ul className="space-y-3 text-xs text-gray-400 uppercase tracking-wide">
+              <li><button onClick={() => navigate('home')} className="hover:text-white transition-colors">Home</button></li>
+              <li><button onClick={() => navigate('about')} className="hover:text-white transition-colors">About Us</button></li>
+              <li><button onClick={() => navigate('facilities')} className="hover:text-white transition-colors">Facilities</button></li>
+              <li><button onClick={() => navigate('amenities')} className="hover:text-white transition-colors">Amenities</button></li>
+            </ul>
+          </div>
+
+          {/* Column 3: More */}
+          <div className="col-span-1 text-center md:text-left">
+            <h4 className="font-bold text-sm mb-6 tracking-wider uppercase text-white/90">MORE</h4>
+            <ul className="space-y-3 text-xs text-gray-400 uppercase tracking-wide">
+              <li><button onClick={() => navigate('events')} className="hover:text-white transition-colors">Events</button></li>
+              <li><button onClick={() => navigate('gallery')} className="hover:text-white transition-colors">Gallery</button></li>
+              <li><button onClick={() => navigate('contact')} className="hover:text-white transition-colors">Contact Us</button></li>
+            </ul>
+          </div>
+
+          {/* Column 4: Contact Us */}
+          <div className="col-span-1 text-center md:text-left">
+            <h4 className="font-bold text-sm mb-6 tracking-wider uppercase text-white/90">CONTACT US</h4>
+            <ul className="space-y-4 text-xs text-gray-400 leading-relaxed">
+              <li className="flex items-start justify-center md:justify-start gap-3">
+                <MapPin size={16} className="mt-0.5 shrink-0" />
+                <span>Persiaran Bandaraya, Pusat Perdagangan<br/>Greentown, 30450 Ipoh, Perak</span>
+              </li>
+              <li className="flex items-center justify-center md:justify-start gap-3">
+                <Phone size={16} className="shrink-0" />
+                <span>05 - 220 0000</span>
+              </li>
+              <li className="flex items-start justify-center md:justify-start gap-3">
+                <Clock size={16} className="mt-0.5 shrink-0" />
+                <span>9:00 AM - 6:00 PM<br/>Monday - Saturday</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Footer Bottom */}
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-500 uppercase tracking-wide">
+          <p>&copy; 2026 Ipoh Convention Centre. All rights reserved.</p>
+          <div className="flex gap-4 mt-4 md:mt-0 items-center">
+            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+            <div className="hidden md:block w-px h-3 bg-gray-600 mx-1"></div>
+            <button onClick={() => navigate('admin')} className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-600 rounded text-gray-400 hover:text-white hover:bg-white/10 transition-colors ml-2">
+              <Shield size={12} /> ADMIN PANEL
+            </button>
+          </div>
+        </div>
+
+        {/* Floating Chat Button */}
+        <button className="fixed bottom-6 right-6 w-12 h-12 bg-[#3b4b5e] hover:bg-[#4a5f77] rounded-full shadow-xl flex items-center justify-center text-white transition-colors z-50">
+          <MessageCircle size={20} />
+        </button>
+      </footer>
+    </div>
+  );
+}
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

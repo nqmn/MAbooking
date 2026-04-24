@@ -1,0 +1,44 @@
+<?php
+/**
+ * @package     Joomla.Administrator
+ * @subpackage  com_mabooking
+ */
+
+namespace Icc\Component\Mabooking\Administrator\View\Dashboard;
+
+\defined('_JEXEC') or die;
+
+use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Toolbar\ToolbarHelper;
+
+class HtmlView extends BaseHtmlView
+{
+	public array $summary = [];
+
+	public array $upcomingBookings = [];
+
+	public array $calendar = [];
+
+	public array $monthlyBookings = [];
+
+	public function display($tpl = null): void
+	{
+		/** @var \Icc\Component\Mabooking\Administrator\Model\DashboardModel $model */
+		$model = $this->getModel();
+		$this->summary = $model->getSummary();
+		$this->calendar = $model->getCalendarContext();
+		$this->monthlyBookings = $model->getMonthlyBookings($this->calendar['year'], $this->calendar['month']);
+		$this->upcomingBookings = $model->getUpcomingBookings();
+
+		$this->addToolbar();
+
+		parent::display($tpl);
+	}
+
+	private function addToolbar(): void
+	{
+		ToolbarHelper::title('MA Booking', 'calendar');
+		ToolbarHelper::addNew('booking.add');
+		ToolbarHelper::preferences('com_mabooking');
+	}
+}

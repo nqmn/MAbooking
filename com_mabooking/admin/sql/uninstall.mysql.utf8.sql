@@ -1,0 +1,5 @@
+-- Booking data is intentionally preserved on uninstall.
+-- Drop these tables manually only when you explicitly want to remove all MA Booking data.
+-- `#__mabooking_bookings`
+-- `#__mabooking_spaces`
+-- `#__mabooking_venues`

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<fields name="params">
+		<fieldset name="articles" label="COM_MABOOKING_FIELDSET_ARTICLES">
+			<field
+				name="enable_article_sync"
+				type="radio"
+				label="COM_MABOOKING_ENABLE_ARTICLE_SYNC_LABEL"
+				description="COM_MABOOKING_ENABLE_ARTICLE_SYNC_DESC"
+				default="0"
+				class="btn-group btn-group-yesno"
+			>
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+			<field
+				name="article_sync_statuses"
+				type="checkboxes"
+				label="COM_MABOOKING_ARTICLE_SYNC_STATUSES_LABEL"
+				description="COM_MABOOKING_ARTICLE_SYNC_STATUSES_DESC"
+				default="confirmed"
+			>
+				<option value="pending">COM_MABOOKING_STATUS_PENDING</option>
+				<option value="confirmed">COM_MABOOKING_STATUS_CONFIRMED</option>
+				<option value="cancelled">COM_MABOOKING_STATUS_CANCELLED</option>
+			</field>
+			<field
+				name="article_category_id"
+				type="category"
+				label="COM_MABOOKING_ARTICLE_CATEGORY_LABEL"
+				description="COM_MABOOKING_ARTICLE_CATEGORY_DESC"
+				extension="com_content"
+			/>
+			<field
+				name="article_state"
+				type="list"
+				label="COM_MABOOKING_ARTICLE_STATE_LABEL"
+				description="COM_MABOOKING_ARTICLE_STATE_DESC"
+				default="1"
+			>
+				<option value="1">JPUBLISHED</option>
+				<option value="0">JUNPUBLISHED</option>
+			</field>
+		</fieldset>
+		<fieldset name="ics" label="COM_MABOOKING_FIELDSET_ICS">
+			<field
+				name="enable_public_ics"
+				type="radio"
+				label="COM_MABOOKING_ENABLE_PUBLIC_ICS_LABEL"
+				description="COM_MABOOKING_ENABLE_PUBLIC_ICS_DESC"
+				default="0"
+				class="btn-group btn-group-yesno"
+			>
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+			<field
+				name="public_ics_confirmed_only"
+				type="radio"
+				label="COM_MABOOKING_PUBLIC_ICS_CONFIRMED_ONLY_LABEL"
+				description="COM_MABOOKING_PUBLIC_ICS_CONFIRMED_ONLY_DESC"
+				default="1"
+				class="btn-group btn-group-yesno"
+				showon="enable_public_ics:1"
+			>
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+		</fieldset>
+	</fields>
+</config>
