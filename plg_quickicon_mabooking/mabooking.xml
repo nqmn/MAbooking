@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="plugin" group="quickicon" method="upgrade">
+	<name>plg_quickicon_mabooking</name>
+	<author>NQMN</author>
+	<creationDate>2026-04-24</creationDate>
+	<version>0.1.0</version>
+	<description>PLG_QUICKICON_MABOOKING_XML_DESCRIPTION</description>
+	<namespace path="src">Icc\Plugin\Quickicon\Mabooking</namespace>
+	<files>
+		<folder plugin="mabooking">services</folder>
+		<folder>src</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/plg_quickicon_mabooking.ini</language>
+		<language tag="en-GB">language/en-GB/plg_quickicon_mabooking.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field
+					name="context"
+					type="text"
+					label="PLG_QUICKICON_MABOOKING_GROUP_LABEL"
+					description="PLG_QUICKICON_MABOOKING_GROUP_DESC"
+					default="mod_quickicon"
+				/>
+			</fieldset>
+		</fields>
+	</config>
+</extension>
