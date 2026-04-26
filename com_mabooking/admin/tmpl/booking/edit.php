@@ -248,6 +248,10 @@ $sourceField = $this->form->getField('source');
 	<?php echo HTMLHelper::_('form.token'); ?>
 </form>
 
+<footer class="ma360-footer">
+	&copy; Developed by <a href="https://github.io/nqmn" target="_blank" rel="noopener">NQMN</a>
+</footer>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 	var venue = document.getElementById('jform_venue_id');
@@ -325,4 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	.mabooking-booking-card__header,
 	.mabooking-booking-card__footer { flex-direction: column; align-items: flex-start; }
 }
+.ma360-footer { text-align: center; font-size: .75rem; color: #9ca3af; padding: 1.5rem 0 .5rem; }
+.ma360-footer a { color: #9ca3af; text-decoration: none; }
+.ma360-footer a:hover { text-decoration: underline; }
 </style>

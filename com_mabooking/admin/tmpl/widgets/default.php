@@ -46,6 +46,10 @@ defined('_JEXEC') or die;
 			<p><a class="mabooking-widgets__button" href="<?php echo htmlspecialchars($this->widgetUrl, ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener noreferrer">Open Widget Preview</a></p>
 		</div>
 	</div>
+
+	<footer class="ma360-footer">
+		&copy; Developed by <a href="https://github.io/nqmn" target="_blank" rel="noopener">NQMN</a>
+	</footer>
 </div>
 
 <style>
@@ -63,4 +67,7 @@ defined('_JEXEC') or die;
 @media (max-width: 900px) {
 	.mabooking-widgets__grid { grid-template-columns: 1fr; }
 }
+.ma360-footer { text-align: center; font-size: .75rem; color: #9ca3af; padding: 1.5rem 0 .5rem; }
+.ma360-footer a { color: #9ca3af; text-decoration: none; }
+.ma360-footer a:hover { text-decoration: underline; }
 </style>

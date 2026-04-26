@@ -153,6 +153,10 @@ $renderStatusBadge = static function (string $value): string {
 			<?php echo $this->pagination->getListFooter(); ?>
 		</div>
 	</div>
+
+	<footer class="ma360-footer">
+		&copy; Developed by <a href="https://github.io/nqmn" target="_blank" rel="noopener">NQMN</a>
+	</footer>
 </div>
 
 <style>
@@ -214,4 +218,7 @@ $renderStatusBadge = static function (string $value): string {
 	.mabooking-bookings { padding: 1rem; }
 	.mabooking-stats { grid-template-columns: 1fr; }
 }
+.ma360-footer { text-align: center; font-size: .75rem; color: #9ca3af; padding: 1.5rem 0 .5rem; }
+.ma360-footer a { color: #9ca3af; text-decoration: none; }
+.ma360-footer a:hover { text-decoration: underline; }
 </style>

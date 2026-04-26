@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="package" version="4.0" method="upgrade">
+	<name>MA Booking</name>
+	<packagename>mabooking</packagename>
+	<version>0.4.5</version>
+	<author>NQMN</author>
+	<description>MA Booking — venue booking component with quickicon plugin.</description>
+	<files folder="packages">
+		<file type="component" id="com_mabooking">com_mabooking.zip</file>
+		<file type="plugin" id="plg_quickicon_mabooking" group="quickicon">plg_quickicon_mabooking.zip</file>
+	</files>
+</extension>

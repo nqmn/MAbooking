@@ -246,6 +246,10 @@ $iconDelete = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6l1 2h4
 			<?php endforeach; ?>
 		</div>
 	</section>
+
+	<footer class="ma360-footer">
+		&copy; Developed by <a href="https://github.io/nqmn" target="_blank" rel="noopener">NQMN</a>
+	</footer>
 </div>
 
 <script>
@@ -379,4 +383,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	.mabooking-form__grid,
 	.mabooking-manage-grid { grid-template-columns: 1fr; }
 }
+.ma360-footer { text-align: center; font-size: .75rem; color: #9ca3af; padding: 1.5rem 0 .5rem; }
+.ma360-footer a { color: #9ca3af; text-decoration: none; }
+.ma360-footer a:hover { text-decoration: underline; }
 </style>
