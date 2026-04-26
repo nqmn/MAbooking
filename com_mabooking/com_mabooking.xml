@@ -4,9 +4,10 @@
 	<author>NQMN</author>
 	<authorEmail>mohdadil@live.com</authorEmail>
 	<creationDate>2026-04-24</creationDate>
-	<version>0.4.5</version>
+	<version>0.4.6</version>
 	<description>COM_MABOOKING_XML_DESCRIPTION</description>
 	<namespace path="src">Icc\Component\Mabooking</namespace>
+	<scriptfile>script.php</scriptfile>
 
 	<files folder="site">
 		<filename>mabooking.php</filename>

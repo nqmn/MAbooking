@@ -11,7 +11,7 @@
 - optional Joomla Article syncing for selected booking statuses
 - a quickicon plugin for the Joomla home dashboard
 
-The current packaged version in this repository is `0.4.5`.
+The current packaged version in this repository is `0.4.6`.
 
 ## Repository Layout
 
@@ -263,8 +263,32 @@ The manifest includes Joomla update schema support:
 - `0.2.0.sql`
 - `0.4.3.sql`
 - `0.4.4.sql`
+- `0.4.6.sql`
 
-Current manifest version: `0.4.5`
+Current manifest version: `0.4.6`
+
+### Missing Table Repair in `0.4.6`
+
+Version `0.4.6` addresses an installation/update failure where administrator submenu pages could show:
+
+```text
+1146 Table '<database>.#__mabooking_bookings' doesn't exist
+```
+
+This can happen when Joomla has an existing `com_mabooking` extension record and treats the upload as an upgrade, but the component tables are missing because a prior install did not run the install SQL, was interrupted, or the tables were manually removed. In that state, the admin dashboard, bookings, venues, and widgets views query `#__mabooking_bookings`, `#__mabooking_venues`, or `#__mabooking_spaces` before the tables exist.
+
+The `0.4.6` package adds two repair paths:
+
+- root-level `script.php`, registered through `<scriptfile>script.php</scriptfile>`, creates the MA Booking tables during install, update, and discover install
+- `admin/sql/updates/mysql/0.4.6.sql` creates the same tables with `CREATE TABLE IF NOT EXISTS` during Joomla schema updates
+
+After installing `pkg_mabooking.zip` version `0.4.6`, the following tables should exist with the site database prefix:
+
+- `#__mabooking_bookings`
+- `#__mabooking_spaces`
+- `#__mabooking_venues`
+
+If the error persists after installing `0.4.6`, verify that the uploaded package is the rebuilt `pkg_mabooking.zip`, then check whether the Joomla database user has `CREATE TABLE` permission.
 
 ## Uninstall Behavior
 

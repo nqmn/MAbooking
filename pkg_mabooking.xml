@@ -2,7 +2,7 @@
 <extension type="package" version="4.0" method="upgrade">
 	<name>MA Booking</name>
 	<packagename>mabooking</packagename>
-	<version>0.4.5</version>
+	<version>0.4.6</version>
 	<author>NQMN</author>
 	<description>MA Booking — venue booking component with quickicon plugin.</description>
 	<files folder="packages">
