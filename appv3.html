@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -58,6 +58,21 @@
     .reveal-on-scroll.is-visible.media-enter {
       animation: imageReveal 1s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
+    @keyframes headerSlideDown {
+      0%   { transform: translateY(-100%); opacity: 0; }
+      100% { transform: translateY(0);     opacity: 1; }
+    }
+    .header-enter {
+      animation: headerSlideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    body.acc-text-lg  { font-size: 110% !important; }
+    body.acc-text-xl  { font-size: 125% !important; }
+    body.acc-contrast { filter: contrast(1.5) saturate(1.1); }
+    body.acc-cursor,
+    body.acc-cursor * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cpath fill='%23000' stroke='%23fff' stroke-width='2.5' d='M10 3 L10 32 L16 26 L21 37 L25 35 L20 24 L29 24 Z'/%3E%3C/svg%3E") 0 0, auto !important; }
+    body.acc-keynav *:focus-visible { outline: 3px solid #4a7ba7 !important; outline-offset: 3px !important; border-radius: 2px; }
+
     @media (prefers-reduced-motion: reduce) {
       .animate-fadeIn,
       .reveal-on-scroll,
@@ -140,6 +155,14 @@ const Search = makeIcon('fa-solid fa-magnifying-glass');
 const Pencil = makeIcon('fa-solid fa-pen');
 const Trash2 = makeIcon('fa-regular fa-trash-can');
 const ImageIcon = makeIcon('fa-regular fa-image');
+const SitemapIcon = makeIcon('fa-solid fa-sitemap');
+const InfoCircle = makeIcon('fa-solid fa-circle-info');
+const Sparkles = makeIcon('fa-solid fa-sparkles');
+const TextIcon = makeIcon('fa-solid fa-t');
+const ZoomOut = makeIcon('fa-solid fa-magnifying-glass-minus');
+const ZoomIn = makeIcon('fa-solid fa-magnifying-glass-plus');
+const ContrastIcon = makeIcon('fa-solid fa-circle-half-stroke');
+const CursorIcon = makeIcon('fa-solid fa-arrow-pointer');
 
 // --- Color Constants based on Design System ---
 const COLORS = {
@@ -173,6 +196,33 @@ const IMAGES = {
   landscapeBanner: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=1920&q=80',
   mapPlaceholder: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1920&q=80',
 };
+
+// --- Mock Data ---
+const mockBookings = [
+  { id: 1, date: "Jan 24, 2026", time: "10:30 - 18:00", room: "Section Hall", venue: "Exhibition Hall", roomColor: "bg-red-500", client: "Faqhrul", phone: "0174003776", email: "client@gmail.com", status: "CONFIRMED" },
+  { id: 2, date: "Nov 7, 2025", time: "12:40 - 22:40", room: "Sections 1, 2 & 3", venue: "Grand Ballroom", roomColor: "bg-blue-500", client: "Dhurga", phone: "0123456789", email: "dhurga@gmail.com", status: "CONFIRMED" },
+  { id: 3, date: "Jan 5, 2026", time: "09:00 - 17:00", room: "Main Hall", venue: "Town Hall", roomColor: "bg-yellow-400", client: "Sarah Lim", phone: "0112233445", email: "sarah@company.com", status: "PENDING" },
+  { id: 4, date: "Jan 12, 2026", time: "14:00 - 20:00", room: "Room 1 & 2", venue: "Bougainvillea Room", roomColor: "bg-green-500", client: "Ahmad Riz", phone: "0198877665", email: "ahmad@event.com", status: "CONFIRMED" },
+  { id: 5, date: "Jan 24, 2026", time: "19:00 - 23:00", room: "Section 1", venue: "Grand Ballroom", roomColor: "bg-blue-500", client: "Wong Tech", phone: "0129988776", email: "wong@tech.my", status: "PENDING" },
+  { id: 6, date: "Jan 28, 2026", time: "08:00 - 12:00", room: "Level 1", venue: "Town Hall", roomColor: "bg-yellow-400", client: "MBI Official", phone: "052201122", email: "contact@mbi.gov.my", status: "CONFIRMED" },
+  { id: 7, date: "Apr 15, 2026", time: "10:00 - 22:00", room: "Exhibition Hall", venue: "Exhibition Hall", roomColor: "bg-red-500", client: "Malaysian Day Sale", phone: "0134455667", email: "info@mds.my", status: "CONFIRMED" },
+  { id: 8, date: "Apr 20, 2026", time: "09:00 - 18:00", room: "Room 1", venue: "Bougainvillea Room", roomColor: "bg-green-500", client: "EMA Organizers", phone: "0178899001", email: "contact@ema.com", status: "CONFIRMED" },
+  { id: 9, date: "Apr 30, 2026", time: "08:00 - 17:00", room: "Section 1, 2 & 3", venue: "Grand Ballroom", roomColor: "bg-blue-500", client: "SEA Conference", phone: "01122334455", email: "hello@seaconf.org", status: "CONFIRMED" },
+  { id: 10, date: "Apr 24, 2026", time: "14:00 - 18:00", room: "Main Hall", venue: "Town Hall", roomColor: "bg-yellow-400", client: "Local Government", phone: "052200111", email: "events@local.gov.my", status: "PENDING" },
+  { id: 11, date: "Apr 24, 2026", time: "19:00 - 23:00", room: "Section 1", venue: "Grand Ballroom", roomColor: "bg-blue-500", client: "Tech Meetup", phone: "0199988877", email: "info@techmeet.my", status: "CONFIRMED" }
+];
+
+const mockPastEvents = [
+  { title: "Perak Wedding Expo 2024", date: "8/22/2024", venue: "Exhibition Hall", attendees: "1200 attendees", desc: "The region's premier wedding showcase featuring top vendors, stunning bridal...", photos: 0, img: IMAGES.galleryCharity },
+  { title: "Corporate Leadership Forum", date: "10/5/2024", venue: "Bougainvillea Room", attendees: "180 attendees", desc: "An exclusive gathering of C-suite executives and business leaders discussing strategic...", photos: 0, img: IMAGES.heroFacilities },
+  { title: "Art & Culture Exhibition", date: "7/18/2024", venue: "Exhibition Hall", attendees: "850 attendees", desc: "A vibrant celebration of Malaysian art and culture featuring contemporary artists...", photos: 0, img: IMAGES.galleryExhibition },
+  { title: "Ipoh Business Convention 2024", date: "6/12/2024", venue: "Grand Ballroom", attendees: "650 attendees", desc: "The largest business networking event in Perak, connecting entrepreneurs, investors, and...", photos: 0, img: IMAGES.featuredHome },
+  { title: "Grand Charity Gala Night", date: "11/8/2024", venue: "Grand Ballroom", attendees: "300 attendees", desc: "An elegant fundraising gala supporting local education initiatives. The evening featured live...", photos: 0, img: IMAGES.galleryBallroom },
+  { title: "International Tech Summit 2024", date: "9/15/2024", venue: "Grand Ballroom", attendees: "520 attendees", desc: "A groundbreaking technology conference featuring industry leaders, innovative startups...", photos: 1, img: IMAGES.galleryTech },
+  { title: "Camping Event", date: "6/5/2024", venue: "Grand Ballroom", attendees: "5000 attendees", desc: "Camping Event Final Days...", photos: 2, img: IMAGES.heroHome },
+  { title: "International Tech Summit 2025", date: "3/15/2025", venue: "Grand Ballroom", attendees: "0 attendees", desc: "Join industry leaders and innovators for the biggest technology summit in Southeast Asia...", photos: 0, img: IMAGES.heroAbout },
+  { title: "Perak Food & Beverage Expo 2025", date: "4/20/2025", venue: "Exhibition Hall", attendees: "0 attendees", desc: "Discover the finest culinary delights from Perak and beyond. This expo showcases local food...", photos: 0, img: IMAGES.heroAmenities }
+];
 
 // --- Reusable Components ---
 
@@ -226,11 +276,16 @@ const setupScrollReveal = () => {
 // --- Page Components ---
 
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const monthNamesShort = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 const Home = ({ setPage }) => {
   const today = new Date();
   const [calYear, setCalYear] = useState(today.getFullYear());
   const [calMonth, setCalMonth] = useState(today.getMonth());
+
+  // Interactive Calendar State
+  const [selectedDateBookings, setSelectedDateBookings] = useState(null);
+  const [hoveredDate, setHoveredDate] = useState(null);
 
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
   const startDay = new Date(calYear, calMonth, 1).getDay();
@@ -245,12 +300,24 @@ const Home = ({ setPage }) => {
       if (m === 0) { setCalYear(y => y - 1); return 11; }
       return m - 1;
     });
+    setSelectedDateBookings(null);
   };
   const nextMonth = () => {
     setCalMonth(m => {
       if (m === 11) { setCalYear(y => y + 1); return 0; }
       return m + 1;
     });
+    setSelectedDateBookings(null);
+  };
+
+  const getDayName = (year, month, day) => {
+    const d = new Date(year, month, day);
+    return d.toLocaleDateString('en-US', { weekday: 'short' });
+  };
+  
+  const getFullDate = (year, month, day) => {
+    const d = new Date(year, month, day);
+    return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
   };
 
   return (
@@ -274,20 +341,20 @@ const Home = ({ setPage }) => {
       {/* Calendar Section */}
       <section className="px-4 pb-20">
         <div className="max-w-5xl mx-auto">
-          <div className="bg-white rounded-t-xl shadow-lg border border-gray-100 overflow-hidden">
+          <div className="bg-white rounded-xl shadow-lg border border-gray-100 relative mb-8">
             {/* Calendar Header */}
-            <div className="flex justify-between items-center px-6 py-4" style={{ backgroundColor: COLORS.calendarHeader }}>
-              <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#7a95b1] hover:bg-gray-50">
-                <ChevronLeft size={20} />
-              </button>
-              <h3 className="text-xl font-bold text-white tracking-widest uppercase">{MONTH_NAMES[calMonth]} {calYear}</h3>
-              <button onClick={nextMonth} className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#7a95b1] hover:bg-gray-50">
-                <ChevronRight size={20} />
-              </button>
+            <div className="flex justify-between items-center px-6 py-4 rounded-t-xl relative z-20" style={{ backgroundColor: COLORS.calendarHeader }}>
+              <div className="flex items-center gap-4">
+                 <button onClick={prevMonth} className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#7a95b1] hover:bg-gray-50"><ChevronLeft size={20} /></button>
+              </div>
+              <h3 className="text-xl font-bold text-white tracking-widest uppercase text-center flex-grow">{MONTH_NAMES[calMonth]} {calYear}</h3>
+              <div className="flex items-center gap-4">
+                 <button onClick={nextMonth} className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-[#7a95b1] hover:bg-gray-50"><ChevronRight size={20} /></button>
+              </div>
             </div>
             
             {/* Calendar Legend */}
-            <div className="px-6 py-4 bg-white border-b border-gray-100">
+            <div className="px-6 py-4 bg-white border-b border-gray-100 relative z-10">
               <div className="flex flex-wrap items-center gap-6 mb-2 text-sm font-semibold text-gray-700">
                 <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-blue-500"></div> Grand Ballroom</span>
                 <span className="flex items-center gap-2"><div className="w-3 h-3 rounded-full bg-red-500"></div> Exhibition Hall</span>
@@ -298,36 +365,143 @@ const Home = ({ setPage }) => {
             </div>
 
             {/* Calendar Days Header */}
-            <div className="grid grid-cols-7 text-center font-bold text-xs py-3" style={{ backgroundColor: COLORS.darkNavy, color: 'white' }}>
+            <div className="grid grid-cols-7 text-center font-bold text-xs py-3 relative z-10" style={{ backgroundColor: COLORS.darkNavy, color: 'white' }}>
               <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
             </div>
 
             {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-px bg-gray-100">
-              {leadingPad.map(d => (
-                <div key={`lead-${d}`} className="bg-gray-50 h-28 p-3 text-gray-400 font-semibold">{d}</div>
-              ))}
-              {[...Array(daysInMonth)].map((_, i) => {
-                const day = i + 1;
-                const isCurrentDay = isTodayCell(day);
-                return (
-                  <div key={day} className={`bg-white h-28 p-3 border border-transparent hover:border-gray-300 transition-colors relative cursor-pointer ${isCurrentDay ? 'border-green-400 hover:border-green-500 bg-[#f7fcf9]' : ''}`}>
-                    <span className={`font-semibold text-sm ${isCurrentDay ? 'text-green-600' : 'text-[#1c2834]'}`}>
-                      {day}
-                    </span>
-                    {isCurrentDay && (
-                      <span className="absolute top-3 right-3 text-[9px] font-bold text-green-700 bg-green-100 border border-green-300 px-1 py-0.5 rounded-sm">
-                        TODAY
-                      </span>
-                    )}
+            <div className="p-6 bg-white rounded-b-xl">
+              <div className="grid grid-cols-7 gap-3">
+                {leadingPad.map(d => (
+                  <div key={`lead-${d}`} className="min-h-[112px] rounded-lg border border-transparent flex flex-col p-2 bg-gray-50/50">
+                    <span className="text-xs font-bold text-gray-400">{d}</span>
                   </div>
-                );
-              })}
-              {trailingPad.map(d => (
-                <div key={`trail-${d}`} className="bg-gray-50 h-28 p-3 text-gray-400 font-semibold">{d}</div>
-              ))}
+                ))}
+                {[...Array(daysInMonth)].map((_, i) => {
+                  const day = i + 1;
+                  const dateStr = `${monthNamesShort[calMonth]} ${day}, ${calYear}`;
+                  const dayBookings = mockBookings.filter(b => b.date === dateStr && b.status === "CONFIRMED"); // Filter out pending from public
+                  const hasBookings = dayBookings.length > 0;
+                  const isHovered = hoveredDate === day;
+                  const isSelected = selectedDateBookings?.day === day;
+                  const isTopHalf = (startDay + i) < 14; 
+                  const isCurrentDay = isTodayCell(day);
+
+                  return (
+                    <div 
+                      key={day} 
+                      onMouseEnter={() => setHoveredDate(day)}
+                      onMouseLeave={() => setHoveredDate(null)}
+                      onClick={() => hasBookings && setSelectedDateBookings({ day, dateStr, fullDate: getFullDate(calYear, calMonth, day), bookings: dayBookings })}
+                      className={`relative min-h-[112px] rounded-lg border p-2 flex flex-col transition-all ${hasBookings ? 'cursor-pointer hover:border-gray-300' : ''} ${isSelected ? 'border-blue-500 ring-1 ring-blue-500 bg-blue-50/20' : isCurrentDay ? 'border-green-400 bg-[#f7fcf9]' : 'border-gray-100 bg-white shadow-sm'}`}
+                    >
+                      <span className={`text-xs font-bold ${isCurrentDay ? 'text-green-600' : hasBookings ? 'text-[#1c2834]' : 'text-gray-500'}`}>
+                        {day}
+                      </span>
+                      {isCurrentDay && (
+                        <span className="absolute top-2 right-2 text-[9px] font-bold text-green-700 bg-green-100 border border-green-300 px-1 py-0.5 rounded-sm">
+                          TODAY
+                        </span>
+                      )}
+
+                      {/* Render Booking Pills */}
+                      <div className="mt-1 space-y-1">
+                          {dayBookings.map((b, idx) => (
+                              <div key={idx} className="flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-200 rounded-full shadow-sm text-[10px] text-gray-600 font-bold tracking-wide truncate">
+                                  <span className={`w-1.5 h-1.5 rounded-full ${b.roomColor} shrink-0`}></span>
+                                  <span className="truncate">{b.venue}</span>
+                              </div>
+                          ))}
+                      </div>
+
+                      {/* Popover */}
+                      {isHovered && hasBookings && (
+                          <div className={`absolute z-[100] left-1/2 -translate-x-1/2 w-64 bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col animate-fadeIn ${isTopHalf ? 'top-[calc(100%+10px)]' : 'bottom-[calc(100%+10px)]'}`} onClick={e => e.stopPropagation()}>
+                              {/* Header */}
+                              <div className="bg-[#64748b] p-3 text-white rounded-t-lg relative z-10">
+                                  <div className="flex items-center gap-2 font-bold text-sm">
+                                      <CalendarIcon size={14} /> {getDayName(calYear, calMonth, day)}, {dateStr}
+                                  </div>
+                                  <div className="text-xs mt-1 text-gray-200">{dayBookings.length} Booking{dayBookings.length > 1 ? 's' : ''}</div>
+                              </div>
+
+                              {/* Body */}
+                              <div className="relative z-10 bg-white max-h-64 overflow-y-auto">
+                                  {dayBookings.map((b, idx) => {
+                                      const borderColor = b.roomColor.replace('bg-', 'border-');
+                                      return (
+                                          <div key={idx} className={`p-4 border-l-4 ${borderColor} border-b border-gray-100 last:border-b-0`}>
+                                              <div className="flex items-center gap-2 text-sm font-bold text-[#1c2834] mb-2">
+                                                  <MapPin size={14} className="text-gray-400" /> {b.venue}
+                                              </div>
+                                              <div className="bg-[#eff4fa] text-[#4a7ba7] text-[11px] px-2 py-1 rounded font-medium mb-3 inline-block">
+                                                  Booked sections: {b.room}
+                                              </div>
+                                              <div className="flex items-center gap-2 text-xs text-gray-500 mb-1.5">
+                                                  <User size={12} className="text-gray-400" /> {b.client}
+                                              </div>
+                                              <div className="flex items-center gap-2 text-xs text-gray-500">
+                                                  <CalendarIcon size={12} className="text-gray-400" /> {b.time}
+                                              </div>
+                                          </div>
+                                      );
+                                  })}
+                              </div>
+                              {/* Footer */}
+                              <div className="bg-gray-50 p-2 text-center text-[11px] text-gray-500 border-t border-gray-100 rounded-b-lg">
+                                  Click date for full details
+                              </div>
+                              {/* Triangle arrow at bottom or top */}
+                              {isTopHalf ? (
+                                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#64748b] rotate-45 pointer-events-none rounded-sm"></div>
+                              ) : (
+                                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-50 border-b border-r border-gray-200 rotate-45 pointer-events-none rounded-sm"></div>
+                              )}
+                          </div>
+                      )}
+                    </div>
+                  );
+                })}
+                {trailingPad.map(d => (
+                  <div key={`trail-${d}`} className="min-h-[112px] rounded-lg border border-transparent flex flex-col p-2 bg-gray-50/50">
+                    <span className="text-xs font-bold text-gray-400">{d}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+
+          {/* Schedule Details Panel */}
+          {selectedDateBookings && (
+            <div className="animate-fadeIn mt-4 bg-white p-8 rounded-xl shadow-lg border border-gray-100 w-full">
+              <h3 className="text-lg font-bold text-[#1c2834] mb-4">Schedule for {selectedDateBookings.fullDate}</h3>
+              <p className="text-sm font-bold text-[#1c2834] mb-4 border-b border-gray-100 pb-2">Venue Bookings</p>
+              
+              <div className="space-y-4">
+                {selectedDateBookings.bookings.map((b, idx) => (
+                  <div key={idx} className="bg-white rounded-lg border border-gray-200 shadow-sm flex overflow-hidden w-full">
+                    <div className={`w-1.5 ${b.roomColor} shrink-0`}></div>
+                    <div className="p-5 flex-grow">
+                      <div className="flex justify-between items-start mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-2 h-2 rounded-full ${b.roomColor}`}></div>
+                          <h4 className="font-bold text-[#1c2834]">{b.venue}</h4>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase ${b.status === 'CONFIRMED' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
+                          {b.status}
+                        </span>
+                      </div>
+                      <div className="space-y-1.5 text-sm text-gray-600">
+                        <p>Booked sections: <span className="font-medium text-[#1c2834]">{b.room}</span></p>
+                        <p>Client: {b.client}</p>
+                        <p className="flex items-center gap-2"><Clock size={14} className="text-gray-400"/> {b.time}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -973,29 +1147,40 @@ const AdminLogin = ({ onLogin, onBack }) => {
   );
 };
 
-// --- Mock Data for Admin Panel ---
-const mockBookings = [
-  { id: 1, date: "Jan 24, 2026", time: "10:30 - 18:00", room: "Section Hall", venue: "Exhibition Hall", roomColor: "bg-red-500", client: "Faqhrul", phone: "0174003776", email: "client@gmail.com", status: "CONFIRMED" },
-  { id: 2, date: "Nov 7, 2025", time: "12:40 - 22:40", room: "Sections 1, 2 & 3", venue: "Grand Ballroom", roomColor: "bg-blue-500", client: "Dhurga", phone: "0123456789", email: "dhurga@gmail.com", status: "CONFIRMED" }
-];
-
-const mockPastEvents = [
-  { title: "Perak Wedding Expo 2024", date: "8/22/2024", venue: "Exhibition Hall", attendees: "1200 attendees", desc: "The region's premier wedding showcase featuring top vendors, stunning bridal...", photos: 0, img: IMAGES.galleryCharity },
-  { title: "Corporate Leadership Forum", date: "10/5/2024", venue: "Bougainvillea Room", attendees: "180 attendees", desc: "An exclusive gathering of C-suite executives and business leaders discussing strategic...", photos: 0, img: IMAGES.heroFacilities },
-  { title: "Art & Culture Exhibition", date: "7/18/2024", venue: "Exhibition Hall", attendees: "850 attendees", desc: "A vibrant celebration of Malaysian art and culture featuring contemporary artists...", photos: 0, img: IMAGES.galleryExhibition },
-  { title: "Ipoh Business Convention 2024", date: "6/12/2024", venue: "Grand Ballroom", attendees: "650 attendees", desc: "The largest business networking event in Perak, connecting entrepreneurs, investors, and...", photos: 0, img: IMAGES.featuredHome },
-  { title: "Grand Charity Gala Night", date: "11/8/2024", venue: "Grand Ballroom", attendees: "300 attendees", desc: "An elegant fundraising gala supporting local education initiatives. The evening featured live...", photos: 0, img: IMAGES.galleryBallroom },
-  { title: "International Tech Summit 2024", date: "9/15/2024", venue: "Grand Ballroom", attendees: "520 attendees", desc: "A groundbreaking technology conference featuring industry leaders, innovative startups...", photos: 1, img: IMAGES.galleryTech },
-  { title: "Camping Event", date: "6/5/2024", venue: "Grand Ballroom", attendees: "5000 attendees", desc: "Camping Event Final Days...", photos: 2, img: IMAGES.heroHome },
-  { title: "International Tech Summit 2025", date: "3/15/2025", venue: "Grand Ballroom", attendees: "0 attendees", desc: "Join industry leaders and innovators for the biggest technology summit in Southeast Asia...", photos: 0, img: IMAGES.heroAbout },
-  { title: "Perak Food & Beverage Expo 2025", date: "4/20/2025", venue: "Exhibition Hall", attendees: "0 attendees", desc: "Discover the finest culinary delights from Perak and beyond. This expo showcases local food...", photos: 0, img: IMAGES.heroAmenities }
-];
+// NOTE: Mock data successfully extracted from here and moved to top of file globally
 
 const AdminPanel = ({ onLogout, onBack }) => {
   const [activeAdminTab, setActiveAdminTab] = useState('Master Calendar');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpcomingEventModalOpen, setIsUpcomingEventModalOpen] = useState(false);
   const [venueCategory, setVenueCategory] = useState('');
+
+  // New state variables for calendar interactivity
+  const [selectedDateBookings, setSelectedDateBookings] = useState(null);
+  const [hoveredDate, setHoveredDate] = useState(null);
+  
+  // Dynamic Calendar State
+  const [adminCalDate, setAdminCalDate] = useState(new Date(2026, 3, 1)); // Default to April 2026
+  const adminYear = adminCalDate.getFullYear();
+  const adminMonth = adminCalDate.getMonth();
+  const adminDaysInMonth = new Date(adminYear, adminMonth + 1, 0).getDate();
+  const adminStartDay = new Date(adminYear, adminMonth, 1).getDay();
+
+  const handlePrevAdminMonth = () => { setAdminCalDate(new Date(adminYear, adminMonth - 1, 1)); setSelectedDateBookings(null); };
+  const handleNextAdminMonth = () => { setAdminCalDate(new Date(adminYear, adminMonth + 1, 1)); setSelectedDateBookings(null); };
+
+  const adminMonthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const adminMonthNamesShort = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // Helper functions for date formatting
+  const getDayName = (year, month, day) => {
+    const d = new Date(year, month, day);
+    return d.toLocaleDateString('en-US', { weekday: 'short' });
+  };
+  const getFullDate = (year, month, day) => {
+    const d = new Date(year, month, day);
+    return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  };
 
   // Renders the dynamic room selection field based on Venue Category
   const renderRoomSelection = () => {
@@ -1134,70 +1319,135 @@ const AdminPanel = ({ onLogout, onBack }) => {
             <h2 className="text-2xl font-bold text-[#1c2834]">Master Calendar</h2>
             <p className="text-gray-500 text-sm mt-1 mb-8">View all bookings, upcoming events, and past events in one centralized calendar</p>
 
-            <div className="border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden">
+            {/* Note: overflow-hidden removed so tooltip popovers don't get clipped */}
+            <div className="border border-gray-200 rounded-xl bg-white shadow-sm mb-8 relative">
               
               {/* Calendar Controls */}
-              <div className="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+              <div className="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 rounded-t-xl bg-white relative z-20">
                 <div className="flex items-center gap-4">
-                  <h3 className="text-xl font-bold text-[#1c2834]">April 2026</h3>
-                  <button className="px-3 py-1 border border-gray-200 text-gray-600 rounded text-xs font-bold hover:bg-gray-50">Today</button>
+                  <h3 className="text-xl font-bold text-[#1c2834]">{adminMonthNames[adminMonth]} {adminYear}</h3>
+                  <button onClick={() => { setAdminCalDate(new Date(2026, 3, 1)); setSelectedDateBookings(null); }} className="px-3 py-1 border border-gray-200 text-gray-600 rounded text-xs font-bold hover:bg-gray-50">Today</button>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded text-gray-600 hover:bg-gray-50"><ChevronLeft size={16} /></button>
-                  <button className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded text-gray-600 hover:bg-gray-50"><ChevronRight size={16} /></button>
+                  <button onClick={handlePrevAdminMonth} className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded text-gray-600 hover:bg-gray-50"><ChevronLeft size={16} /></button>
+                  <button onClick={handleNextAdminMonth} className="w-8 h-8 flex items-center justify-center border border-gray-200 rounded text-gray-600 hover:bg-gray-50"><ChevronRight size={16} /></button>
                 </div>
               </div>
 
               {/* Filter Pills */}
-              <div className="px-6 py-4 border-b border-gray-100 flex flex-wrap gap-3">
+              <div className="px-6 py-4 border-b border-gray-100 flex flex-wrap gap-3 relative z-10 bg-white">
                 <button className="px-4 py-1.5 bg-[#1c2834] text-white rounded-full text-xs font-bold flex items-center gap-2 shadow-sm">
                   All Events
                 </button>
                 <button className="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-blue-100 transition-colors">
-                  <div className="w-2 h-2 rounded-full bg-blue-500"></div> Bookings (5)
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div> Bookings ({mockBookings.length})
                 </button>
                 <button className="px-4 py-1.5 bg-orange-50 text-orange-600 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-orange-100 transition-colors">
                   <div className="w-2 h-2 rounded-full bg-orange-500"></div> Upcoming Events (0)
                 </button>
                 <button className="px-4 py-1.5 bg-green-50 text-green-600 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-green-100 transition-colors">
-                  <div className="w-2 h-2 rounded-full bg-green-500"></div> Past Events (59)
+                  <div className="w-2 h-2 rounded-full bg-green-500"></div> Past Events ({mockPastEvents.length})
                 </button>
               </div>
 
               {/* Grid Header */}
-              <div className="grid grid-cols-7 text-center py-4 border-b border-gray-100">
+              <div className="grid grid-cols-7 text-center py-4 border-b border-gray-100 bg-white relative z-10">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
                   <div key={day} className="text-xs font-bold text-gray-500 uppercase tracking-wide">{day}</div>
                 ))}
               </div>
 
               {/* Grid Body */}
-              <div className="p-6">
-                <div className="grid grid-cols-7 grid-rows-5 gap-3">
-                  {/* Padding */}
-                  <div className="h-28 rounded-lg border border-transparent"></div>
-                  <div className="h-28 rounded-lg border border-transparent"></div>
-                  <div className="h-28 rounded-lg border border-transparent"></div>
+              <div className="p-6 bg-white">
+                <div className="grid grid-cols-7 gap-3">
+                  {/* Padding for start of month */}
+                  {[...Array(adminStartDay)].map((_, i) => (
+                    <div key={`pad-${i}`} className="min-h-[112px] rounded-lg border border-transparent"></div>
+                  ))}
                   
                   {/* Days */}
-                  {[...Array(30)].map((_, i) => {
+                  {[...Array(adminDaysInMonth)].map((_, i) => {
                     const day = i + 1;
-                    const isToday = day === 21;
+                    const dateStr = `${adminMonthNamesShort[adminMonth]} ${day}, ${adminYear}`;
+                    const dayBookings = mockBookings.filter(b => b.date === dateStr);
+                    const hasBookings = dayBookings.length > 0;
+                    const isHovered = hoveredDate === day;
+                    const isSelected = selectedDateBookings?.day === day;
+                    const isTopHalf = (adminStartDay + i) < 14; // Determine if in top 2 rows to flip tooltip direction
+
                     return (
-                      <div key={day} className={`h-28 rounded-lg border p-2 flex flex-col ${isToday ? 'border-gray-400 bg-gray-50 shadow-sm' : 'border-gray-100 hover:border-gray-300 transition-colors cursor-pointer'}`}>
-                        <span className={`text-xs font-bold ${isToday ? 'text-[#1c2834]' : 'text-gray-500'}`}>{day}</span>
+                      <div 
+                        key={day} 
+                        onMouseEnter={() => setHoveredDate(day)}
+                        onMouseLeave={() => setHoveredDate(null)}
+                        onClick={() => hasBookings && setSelectedDateBookings({ day, dateStr, fullDate: getFullDate(adminYear, adminMonth, day), bookings: dayBookings })}
+                        className={`relative min-h-[112px] rounded-lg border p-2 flex flex-col transition-all ${hasBookings ? 'cursor-pointer hover:border-gray-300' : ''} ${isSelected ? 'border-blue-500 ring-1 ring-blue-500 bg-blue-50/20' : 'border-gray-100 bg-white shadow-sm'}`}
+                      >
+                        <span className={`text-xs font-bold ${day === 24 && adminMonth === 0 ? 'text-[#1c2834] text-sm' : 'text-gray-500'}`}>{day}</span>
+                        
+                        {/* Render Booking Pills */}
+                        <div className="mt-1 space-y-1">
+                            {dayBookings.map((b, idx) => (
+                                <div key={idx} className="flex items-center gap-1.5 px-2 py-1 bg-white border border-gray-200 rounded-full shadow-sm text-[10px] text-gray-600 font-bold tracking-wide truncate">
+                                    <span className={`w-1.5 h-1.5 rounded-full ${b.roomColor} shrink-0`}></span>
+                                    <span className="truncate">{b.venue}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Popover */}
+                        {isHovered && hasBookings && (
+                            <div className={`absolute z-[100] left-1/2 -translate-x-1/2 w-64 bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col animate-fadeIn ${isTopHalf ? 'top-[calc(100%+10px)]' : 'bottom-[calc(100%+10px)]'}`} onClick={e => e.stopPropagation()}>
+                                {/* Header */}
+                                <div className="bg-[#64748b] p-3 text-white rounded-t-lg relative z-10">
+                                    <div className="flex items-center gap-2 font-bold text-sm">
+                                        <CalendarIcon size={14} /> {getDayName(adminYear, adminMonth, day)}, {dateStr}
+                                    </div>
+                                    <div className="text-xs mt-1 text-gray-200">{dayBookings.length} Booking{dayBookings.length > 1 ? 's' : ''}</div>
+                                </div>
+
+                                {/* Body */}
+                                <div className="relative z-10 bg-white max-h-64 overflow-y-auto">
+                                    {dayBookings.map((b, idx) => {
+                                        const borderColor = b.roomColor.replace('bg-', 'border-');
+                                        return (
+                                            <div key={idx} className={`p-4 border-l-4 ${borderColor} border-b border-gray-100 last:border-b-0`}>
+                                                <div className="flex items-center gap-2 text-sm font-bold text-[#1c2834] mb-2">
+                                                    <MapPin size={14} className="text-gray-400" /> {b.venue}
+                                                </div>
+                                                <div className="bg-[#eff4fa] text-[#4a7ba7] text-[11px] px-2 py-1 rounded font-medium mb-3 inline-block">
+                                                    Booked sections: {b.room}
+                                                </div>
+                                                <div className="flex items-center gap-2 text-xs text-gray-500 mb-1.5">
+                                                    <User size={12} className="text-gray-400" /> {b.client}
+                                                </div>
+                                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                                    <CalendarIcon size={12} className="text-gray-400" /> {b.time}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                {/* Footer */}
+                                <div className="bg-gray-50 p-2 text-center text-[11px] text-gray-500 border-t border-gray-100 rounded-b-lg">
+                                    Click date for full details
+                                </div>
+                                {/* Triangle arrow at bottom or top */}
+                                {isTopHalf ? (
+                                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#64748b] rotate-45 pointer-events-none rounded-sm"></div>
+                                ) : (
+                                    <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-50 border-b border-r border-gray-200 rotate-45 pointer-events-none rounded-sm"></div>
+                                )}
+                            </div>
+                        )}
                       </div>
                     );
                   })}
-                  
-                  {/* Padding */}
-                  <div className="h-28 rounded-lg border border-transparent"></div>
-                  <div className="h-28 rounded-lg border border-transparent"></div>
                 </div>
               </div>
 
               {/* Legend */}
-              <div className="p-6 bg-gray-50 border-t border-gray-100 flex flex-wrap gap-12">
+              <div className="p-6 bg-gray-50 border-t border-gray-100 flex flex-wrap gap-12 rounded-b-xl relative z-10">
                 <div>
                   <p className="text-xs font-bold text-[#1c2834] mb-3">Legend</p>
                   <div className="flex gap-8">
@@ -1207,8 +1457,39 @@ const AdminPanel = ({ onLogout, onBack }) => {
                   </div>
                 </div>
               </div>
-
             </div>
+
+            {/* Schedule Details (Appears when a date with bookings is clicked) */}
+            {selectedDateBookings && (
+              <div className="animate-fadeIn pb-10">
+                <h3 className="text-lg font-bold text-[#1c2834] mb-4">Schedule for {selectedDateBookings.fullDate}</h3>
+                <p className="text-sm font-bold text-[#1c2834] mb-3">Venue Bookings</p>
+                
+                <div className="space-y-4">
+                  {selectedDateBookings.bookings.map((b, idx) => (
+                    <div key={idx} className="bg-white rounded-lg border border-gray-200 shadow-sm flex overflow-hidden w-full">
+                      <div className={`w-1.5 ${b.roomColor} shrink-0`}></div>
+                      <div className="p-5 flex-grow">
+                        <div className="flex justify-between items-start mb-3">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 rounded-full ${b.roomColor}`}></div>
+                            <h4 className="font-bold text-[#1c2834]">{b.venue}</h4>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase ${b.status === 'CONFIRMED' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
+                            {b.status}
+                          </span>
+                        </div>
+                        <div className="space-y-1.5 text-sm text-gray-600">
+                          <p>Booked sections: {b.room}</p>
+                          <p>Client: {b.client}</p>
+                          <p>Time: {b.time}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -1568,6 +1849,32 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [selectedLang, setSelectedLang] = useState('EN');
+  const [langOpen, setLangOpen] = useState(false);
+  const [accessOpen, setAccessOpen] = useState(false);
+  const [sitemapOpen, setSitemapOpen] = useState(false);
+  const [textSize, setTextSize] = useState(0);
+  const [highContrast, setHighContrast] = useState(false);
+  const [largerCursor, setLargerCursor] = useState(false);
+  const [keyNav, setKeyNav] = useState(false);
+
+  useEffect(() => {
+    const b = document.body;
+    b.classList.toggle('acc-text-lg', textSize === 1);
+    b.classList.toggle('acc-text-xl', textSize === 2);
+    b.classList.toggle('acc-contrast', highContrast);
+    b.classList.toggle('acc-cursor', largerCursor);
+    b.classList.toggle('acc-keynav', keyNav);
+  }, [textSize, highContrast, largerCursor, keyNav]);
+
+  const resetAccess = () => { setTextSize(0); setHighContrast(false); setLargerCursor(false); setKeyNav(false); };
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     let cleanup = () => {};
@@ -1594,6 +1901,7 @@ function App() {
   const navigate = (id) => {
     setCurrentPage(id);
     setMobileMenuOpen(false);
+    setSitemapOpen(false);
     window.scrollTo(0, 0);
   };
 
@@ -1627,27 +1935,34 @@ function App() {
     <div className="font-sans text-[#333333] min-h-screen flex flex-col bg-white">
       
       {/* Header */}
-      <header className="bg-white text-[#1c2834] sticky top-0 z-50 shadow-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-          
+      <header className="fixed top-0 left-0 right-0 z-50 header-enter">
+        {/* Frosted glass background — always visible */}
+        <div className="absolute inset-0 bg-white/95 backdrop-blur-xl"></div>
+
+        {/* Bottom border gradient — always visible */}
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
+
+        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center relative z-10">
+
           {/* Logo Section */}
           <div className="flex items-center gap-4 cursor-pointer" onClick={() => navigate('home')}>
             <div className="w-12 h-12 bg-[#1c2834] rounded flex items-center justify-center text-white font-bold text-xl tracking-tighter">
               ICC
             </div>
-            <div className="hidden sm:block leading-none border-l-2 border-gray-200 pl-4 py-1">
-              <div className="font-bold text-sm tracking-widest text-[#1c2834]">IPOH CONVENTION</div>
-              <div className="font-light tracking-[0.2em] text-xs text-gray-500 mt-1">CENTRE</div>
+            {/* Branding text collapses on scroll */}
+            <div className={`block overflow-hidden leading-none border-l-2 pl-4 py-1 transition-all duration-300 ${scrolled ? 'max-h-0 opacity-0 border-transparent' : 'max-h-12 opacity-100 border-gray-200'}`}>
+              <div className="font-bold text-[10px] sm:text-sm tracking-widest text-[#1c2834] whitespace-nowrap">IPOH CONVENTION</div>
+              <div className="font-light tracking-[0.15em] sm:tracking-[0.2em] text-[9px] sm:text-xs text-gray-500 mt-1 whitespace-nowrap">CENTRE</div>
             </div>
           </div>
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex gap-6 text-xs font-bold tracking-widest uppercase items-center">
             {navLinks.map(link => (
-              <button 
-                key={link.id} 
+              <button
+                key={link.id}
                 onClick={() => navigate(link.id)}
-                className={`hover:text-[#4a7ba7] transition-colors py-2 relative ${currentPage === link.id ? 'text-[#1c2834]' : 'text-gray-500'}`}
+                className={`transition-colors py-2 relative ${currentPage === link.id ? 'text-[#1c2834]' : 'text-gray-500 hover:text-[#4a7ba7]'}`}
               >
                 {link.label}
                 {currentPage === link.id && (
@@ -1659,13 +1974,51 @@ function App() {
 
           {/* Right Controls */}
           <div className="flex items-center gap-4 text-gray-500">
-            <div className="hidden sm:flex items-center gap-1 border border-gray-200 rounded px-3 py-1.5 text-xs font-bold cursor-pointer hover:bg-gray-50">
-              <Globe size={14} /> EN <ChevronDown size={14} className="ml-1" />
+            {/* Language Selector */}
+            <div className="relative">
+              <button
+                onClick={() => setLangOpen(o => !o)}
+                onBlur={() => setTimeout(() => setLangOpen(false), 150)}
+                className="flex items-center gap-1.5 border border-gray-200 rounded px-3 py-1.5 text-xs font-bold cursor-pointer hover:bg-gray-50 select-none"
+              >
+                <span>{selectedLang === 'EN' ? '🇬🇧' : '🇲🇾'}</span>
+                <span>{selectedLang}</span>
+                <ChevronDown size={12} className={`ml-0.5 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {langOpen && (
+                <div className="absolute right-0 top-full mt-1.5 w-28 bg-white border border-gray-100 rounded shadow-lg overflow-hidden z-50">
+                  {[{ code: 'EN', flag: '🇬🇧' }, { code: 'BM', flag: '🇲🇾' }].map(({ code, flag }) => (
+                    <button
+                      key={code}
+                      onMouseDown={() => { setSelectedLang(code); setLangOpen(false); }}
+                      className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold hover:bg-gray-50 transition-colors ${selectedLang === code ? 'text-[#1c2834]' : 'text-gray-500'}`}
+                    >
+                      <span>{flag}</span>
+                      <span>{code}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-            <button className="hidden sm:flex items-center justify-center w-8 h-8 rounded border border-gray-200 hover:bg-gray-50">
+
+            {/* Sitemap Button */}
+            <button
+              onClick={() => setSitemapOpen(o => !o)}
+              className={`hidden sm:flex items-center justify-center w-8 h-8 rounded border transition-colors ${sitemapOpen ? 'bg-[#1c2834] border-[#1c2834] text-white' : 'border-gray-200 hover:bg-gray-50 text-gray-500'}`}
+              title="Sitemap"
+            >
+              <SitemapIcon size={16} />
+            </button>
+
+            {/* Accessibility Button */}
+            <button
+              onClick={() => setAccessOpen(o => !o)}
+              className={`hidden sm:flex items-center justify-center w-8 h-8 rounded border transition-colors ${accessOpen ? 'bg-[#1c2834] border-[#1c2834] text-white' : 'border-gray-200 hover:bg-gray-50 text-gray-500'}`}
+              title="Accessibility"
+            >
               <Accessibility size={16} />
             </button>
-            
+
             {/* Mobile Menu Toggle */}
             <button className="lg:hidden p-2 text-[#1c2834]" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
@@ -1675,11 +2028,11 @@ function App() {
 
         {/* Mobile Nav Dropdown */}
         {mobileMenuOpen && (
-          <nav className="lg:hidden bg-white border-b shadow-lg absolute w-full left-0 top-full">
+          <nav className="lg:hidden bg-white border-b shadow-lg absolute w-full left-0 top-full z-10">
             <ul className="flex flex-col">
               {navLinks.map(link => (
                 <li key={link.id}>
-                  <button 
+                  <button
                     onClick={() => navigate(link.id)}
                     className={`w-full text-left px-6 py-4 border-b border-gray-50 text-sm font-bold uppercase tracking-wide ${currentPage === link.id ? 'bg-gray-50 text-[#1c2834]' : 'text-gray-500'}`}
                   >
@@ -1687,6 +2040,22 @@ function App() {
                   </button>
                 </li>
               ))}
+              <li>
+                <button
+                  onClick={() => setSitemapOpen(true)}
+                  className={`w-full text-left px-6 py-4 border-b border-gray-50 text-sm font-bold uppercase tracking-wide flex items-center gap-3 text-gray-500`}
+                >
+                  <SitemapIcon size={16}/> SITEMAP
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setAccessOpen(true)}
+                  className={`w-full text-left px-6 py-4 border-b border-gray-50 text-sm font-bold uppercase tracking-wide flex items-center gap-3 text-gray-500`}
+                >
+                  <Accessibility size={16}/> ACCESSIBILITY
+                </button>
+              </li>
             </ul>
           </nav>
         )}
@@ -1739,6 +2108,7 @@ function App() {
               <li><button onClick={() => navigate('events')} className="hover:text-white transition-colors">Events</button></li>
               <li><button onClick={() => navigate('gallery')} className="hover:text-white transition-colors">Gallery</button></li>
               <li><button onClick={() => navigate('contact')} className="hover:text-white transition-colors">Contact Us</button></li>
+              <li><button onClick={() => setSitemapOpen(true)} className="hover:text-white transition-colors">Sitemap</button></li>
             </ul>
           </div>
 
@@ -1781,6 +2151,233 @@ function App() {
           <MessageCircle size={20} />
         </button>
       </footer>
+
+      {/* Sitemap Overlay */}
+      {sitemapOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl my-auto flex flex-col max-h-[90vh] overflow-hidden">
+            
+            {/* Header */}
+            <div className="flex justify-between items-start p-8 bg-[#4a5f77] text-white shrink-0">
+              <div>
+                <h2 className="text-3xl font-bold tracking-wide">Sitemap</h2>
+                <p className="text-[13px] text-gray-200 mt-2 font-light tracking-wide">Quick navigation to all pages</p>
+              </div>
+              <button onClick={() => setSitemapOpen(false)} className="text-white/70 hover:text-white transition-colors mt-1">
+                <X size={24} />
+              </button>
+            </div>
+            
+            {/* Body */}
+            <div className="p-8 md:p-10 overflow-y-auto bg-white flex-grow">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 items-start">
+                
+                {/* HOME */}
+                <button onClick={() => navigate('home')} className="flex items-center gap-5 p-5 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left w-full group">
+                   <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                     <HomeIcon size={20} className="text-[#4a5f77]" />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-[#1c2834] uppercase tracking-wide text-[15px]">HOME</h4>
+                     <p className="text-gray-500 text-[13px] mt-0.5">Main landing page</p>
+                   </div>
+                </button>
+
+                {/* ABOUT US */}
+                <button onClick={() => navigate('about')} className="flex items-center gap-5 p-5 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left w-full group">
+                   <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                     <InfoCircle size={20} className="text-[#4a5f77]" />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-[#1c2834] uppercase tracking-wide text-[15px]">ABOUT US</h4>
+                     <p className="text-gray-500 text-[13px] mt-0.5">Learn about ICC</p>
+                   </div>
+                </button>
+
+                {/* FACILITIES */}
+                <div className="flex flex-col gap-3">
+                  <button onClick={() => navigate('facilities')} className="flex items-center gap-5 p-5 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left w-full group">
+                     <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                       <Building size={20} className="text-[#4a5f77]" />
+                     </div>
+                     <div>
+                       <h4 className="font-bold text-[#1c2834] uppercase tracking-wide text-[15px]">FACILITIES</h4>
+                       <p className="text-gray-500 text-[13px] mt-0.5">View our venues</p>
+                     </div>
+                  </button>
+                  <div className="pl-6 md:pl-[88px] flex flex-col gap-4 py-2">
+                    {['Exhibition Hall', 'Bougainvillea Room', 'Grand Ballroom', 'Other Venues'].map(venue => (
+                      <button key={venue} onClick={() => navigate('facilities')} className="text-left text-[13px] text-[#4a5f77] hover:text-[#1c2834] font-medium flex items-center gap-2 transition-colors">
+                        <span className="text-gray-400 font-light">&rarr;</span> {venue}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* AMENITIES */}
+                <button onClick={() => navigate('amenities')} className="flex items-center gap-5 p-5 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left w-full group">
+                   <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                     <Sparkles size={20} className="text-[#4a5f77]" />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-[#1c2834] uppercase tracking-wide text-[15px]">AMENITIES</h4>
+                     <p className="text-gray-500 text-[13px] mt-0.5">Our services</p>
+                   </div>
+                </button>
+
+                {/* EVENTS */}
+                <button onClick={() => navigate('events')} className="flex items-center gap-5 p-5 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left w-full group">
+                   <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                     <CalendarDays size={20} className="text-[#4a5f77]" />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-[#1c2834] uppercase tracking-wide text-[15px]">EVENTS</h4>
+                     <p className="text-gray-500 text-[13px] mt-0.5">Upcoming events</p>
+                   </div>
+                </button>
+
+                {/* GALLERY */}
+                <button onClick={() => navigate('gallery')} className="flex items-center gap-5 p-5 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left w-full group">
+                   <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                     <ImageIcon size={20} className="text-[#4a5f77]" />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-[#1c2834] uppercase tracking-wide text-[15px]">GALLERY</h4>
+                     <p className="text-gray-500 text-[13px] mt-0.5">Photo gallery</p>
+                   </div>
+                </button>
+
+                {/* CONTACT US */}
+                <button onClick={() => navigate('contact')} className="flex items-center gap-5 p-5 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left w-full group">
+                   <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                     <Mail size={20} className="text-[#4a5f77]" />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-[#1c2834] uppercase tracking-wide text-[15px]">CONTACT US</h4>
+                     <p className="text-gray-500 text-[13px] mt-0.5">Get in touch</p>
+                   </div>
+                </button>
+
+                {/* ADMIN LOGIN */}
+                <button onClick={() => navigate('admin')} className="flex items-center gap-5 p-5 bg-gray-50 hover:bg-gray-100 rounded-2xl transition-colors text-left w-full group">
+                   <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-100 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                     <Shield size={20} className="text-[#4a5f77]" />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-[#1c2834] tracking-wide text-[15px]">Admin Login</h4>
+                     <p className="text-gray-500 text-[13px] mt-0.5">Access admin panel</p>
+                   </div>
+                </button>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* Accessibility Sidebar */}
+      <div className={`fixed inset-0 z-[60] flex justify-end transition-opacity duration-300 ${accessOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/30" onClick={() => setAccessOpen(false)}></div>
+
+          {/* Panel */}
+          <div className={`relative w-[420px] max-w-full h-full bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-in-out overflow-hidden ${accessOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+
+            {/* Panel Header */}
+            <div className="flex justify-between items-start p-8 bg-gradient-to-br from-[#3b4b5e] to-[#4a5f77] text-white shrink-0">
+              <div>
+                <h2 className="text-2xl font-bold tracking-wide">Accessibility Features</h2>
+                <p className="text-[13px] text-gray-200 mt-1.5 font-light tracking-wide">OKU-friendly features</p>
+              </div>
+              <button onClick={() => setAccessOpen(false)} className="text-white/70 hover:text-white transition-colors mt-1">
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Options */}
+            <div className="flex-grow overflow-y-auto px-8 py-8 bg-white">
+
+              {/* Text Size */}
+              <div className="mb-8">
+                <div className="flex items-center gap-4 mb-4">
+                   <div className="w-12 h-12 rounded-xl bg-[#f0f4f8] flex items-center justify-center text-[#4a7ba7] shrink-0">
+                     <TextIcon size={18} />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-[#1c2834] text-[15px]">Text Size</h4>
+                     <p className="text-gray-500 text-[13px] mt-0.5">Adjust font size ({textSize === 0 ? '100%' : textSize === 1 ? '110%' : '125%'})</p>
+                   </div>
+                </div>
+                <div className="flex gap-3">
+                   <button onClick={() => setTextSize(Math.max(0, textSize - 1))} className="flex-1 py-3 bg-[#f0f4f8] hover:bg-[#e2e8f0] text-[#1c2834] font-bold text-[13px] rounded-xl flex items-center justify-center gap-2 transition-colors">
+                     <ZoomOut size={14} /> Smaller
+                   </button>
+                   <button onClick={() => setTextSize(Math.min(2, textSize + 1))} className="flex-1 py-3 bg-[#f0f4f8] hover:bg-[#e2e8f0] text-[#1c2834] font-bold text-[13px] rounded-xl flex items-center justify-center gap-2 transition-colors">
+                     <ZoomIn size={14} /> Larger
+                   </button>
+                </div>
+              </div>
+
+              {/* High Contrast */}
+              <div className="mb-8">
+                <div className="flex items-center gap-4 mb-4">
+                   <div className="w-12 h-12 rounded-xl bg-[#f0f4f8] flex items-center justify-center text-[#4a7ba7] shrink-0">
+                     <ContrastIcon size={20} />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-[#1c2834] text-[15px]">High Contrast</h4>
+                     <p className="text-gray-500 text-[13px] mt-0.5">Enhance visibility</p>
+                   </div>
+                </div>
+                <button onClick={() => setHighContrast(!highContrast)} className={`w-full py-3.5 font-bold text-[13px] rounded-xl transition-colors ${highContrast ? 'bg-[#1c2834] text-white shadow-md' : 'bg-[#f0f4f8] hover:bg-[#e2e8f0] text-[#1c2834]'}`}>
+                   {highContrast ? 'Disable High Contrast' : 'Enable High Contrast'}
+                </button>
+              </div>
+
+              {/* Larger Cursor */}
+              <div className="mb-8">
+                <div className="flex items-center gap-4 mb-4">
+                   <div className="w-12 h-12 rounded-xl bg-[#f0f4f8] flex items-center justify-center text-[#4a7ba7] shrink-0">
+                     <CursorIcon size={20} />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-[#1c2834] text-[15px]">Larger Cursor</h4>
+                     <p className="text-gray-500 text-[13px] mt-0.5">Easier to see</p>
+                   </div>
+                </div>
+                <button onClick={() => setLargerCursor(!largerCursor)} className={`w-full py-3.5 font-bold text-[13px] rounded-xl transition-colors ${largerCursor ? 'bg-[#1c2834] text-white shadow-md' : 'bg-[#f0f4f8] hover:bg-[#e2e8f0] text-[#1c2834]'}`}>
+                   {largerCursor ? 'Disable Larger Cursor' : 'Enable Larger Cursor'}
+                </button>
+              </div>
+
+              {/* Keyboard Navigation Info */}
+              <div className="mb-6 bg-[#f4f7fb] border-l-[3px] border-[#4a7ba7] rounded-r-xl p-5 shadow-sm">
+                 <h4 className="font-bold text-[#1c2834] text-[14px] mb-3">Keyboard Navigation</h4>
+                 <div className="space-y-2.5 text-[12px] text-gray-600">
+                   <div className="flex items-center gap-2"><kbd className="px-1.5 py-0.5 bg-white border border-gray-200 rounded shadow-sm font-sans text-xs text-[#1c2834]">Tab</kbd> - Navigate forward</div>
+                   <div className="flex items-center gap-2"><kbd className="px-1.5 py-0.5 bg-white border border-gray-200 rounded shadow-sm font-sans text-xs text-[#1c2834]">Shift + Tab</kbd> - Navigate backward</div>
+                   <div className="flex items-center gap-2"><kbd className="px-1.5 py-0.5 bg-white border border-gray-200 rounded shadow-sm font-sans text-xs text-[#1c2834]">Enter</kbd> - Activate element</div>
+                   <div className="flex items-center gap-2"><kbd className="px-1.5 py-0.5 bg-white border border-gray-200 rounded shadow-sm font-sans text-xs text-[#1c2834]">Esc</kbd> - Close modals</div>
+                 </div>
+              </div>
+
+              {/* Screen Reader Compatible Info */}
+              <div className="mb-8 bg-[#f2fcf5] border-l-[3px] border-[#22c55e] rounded-r-xl p-5 shadow-sm">
+                 <h4 className="font-bold text-[#1c2834] text-[14px] mb-1.5">Screen Reader Compatible</h4>
+                 <p className="text-[12px] text-gray-600 leading-relaxed pr-2">This website is optimized for JAWS, NVDA, and VoiceOver screen readers.</p>
+              </div>
+
+              {/* Reset */}
+              <button
+                onClick={resetAccess}
+                className="w-full py-4 bg-[#e2e8f0] hover:bg-[#cbd5e1] text-[#1c2834] rounded-xl text-[14px] font-bold transition-colors mb-4"
+              >
+                Reset All Settings
+              </button>
+            </div>
+          </div>
+      </div>
     </div>
   );
 }
