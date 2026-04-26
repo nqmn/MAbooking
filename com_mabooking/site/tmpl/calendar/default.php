@@ -184,7 +184,7 @@ foreach ($this->bookings as $date => $entries)
 .iccbooking-day { min-height: 8.5rem; padding: .75rem; border: 1px solid #d8e0e8; border-radius: .95rem; background: #fff; display: grid; align-content: start; gap: .4rem; position: relative; }
 .iccbooking-day.has-bookings { cursor: pointer; transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
 .iccbooking-day.has-bookings:hover,
-.iccbooking-day.has-bookings.is-selected { border-color: #7a95b1; box-shadow: 0 12px 26px rgba(28, 40, 52, .12); transform: translateY(-1px); }
+.iccbooking-day.has-bookings.is-selected { border-color: #7a95b1; box-shadow: 0 12px 26px rgba(28, 40, 52, .12); transform: translateY(-1px); z-index: 10; }
 .iccbooking-day--empty { background: transparent; border-style: dashed; }
 .iccbooking-day-number { font-weight: 700; color: #1c2834; }
 .iccbooking-entry { font-size: .75rem; border-radius: .75rem; padding: .45rem .55rem; display: grid; gap: .15rem; }

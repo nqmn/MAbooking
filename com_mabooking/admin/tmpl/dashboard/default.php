@@ -645,7 +645,7 @@ document.addEventListener('DOMContentLoaded', function () {
 .mabooking-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .75rem; padding: 1.5rem; background: #fff; }
 .mabooking-grid__cell { min-height: 7rem; border: 1px solid #f1f5f9; border-radius: .85rem; padding: .65rem; display: grid; align-content: start; gap: .4rem; cursor: pointer; position: relative; }
 .mabooking-grid__cell.has-bookings { transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
-.mabooking-grid__cell.has-bookings:hover, .mabooking-grid__cell.has-bookings.is-selected { border-color: #7a95b1; box-shadow: 0 12px 26px rgba(15, 23, 42, .12); transform: translateY(-1px); }
+.mabooking-grid__cell.has-bookings:hover, .mabooking-grid__cell.has-bookings.is-selected { border-color: #7a95b1; box-shadow: 0 12px 26px rgba(15, 23, 42, .12); transform: translateY(-1px); z-index: 10; }
 .mabooking-grid__cell--blank { border-color: transparent; background: transparent; cursor: default; }
 .mabooking-grid__cell.is-today { background: #f8fafc; border-color: #9ca3af; box-shadow: inset 0 0 0 1px #d1d5db; }
 .mabooking-grid__day { font-size: .78rem; font-weight: 700; color: #4b5563; }
