@@ -54,6 +54,30 @@ foreach ($this->monthlyBookings as $entries)
 	}
 }
 
+$bookingDetails = [];
+
+foreach ($this->monthlyBookings as $date => $entries)
+{
+	foreach ($entries as $booking)
+	{
+		$bookingDetails[$date][] = [
+			'id' => (int) $booking->id,
+			'date' => (string) $booking->booking_date,
+			'event' => (string) ($booking->event_title ?: $booking->space_title . ' Booking'),
+			'venue' => (string) $booking->venue_title,
+			'space' => (string) $booking->space_title,
+			'time' => substr((string) $booking->start_time, 0, 5) . ' - ' . substr((string) $booking->end_time, 0, 5),
+			'status' => ucfirst((string) $booking->status),
+			'client' => (string) $booking->client_name,
+			'phone' => (string) $booking->client_phone,
+			'email' => (string) $booking->client_email,
+			'attendees' => (int) $booking->attendees,
+			'notes' => (string) $booking->notes,
+			'editUrl' => Route::_('index.php?option=com_mabooking&task=booking.edit&id=' . (int) $booking->id),
+		];
+	}
+}
+
 $renderStatusBadge = static function (string $status): string {
 	$status = strtolower($status);
 	$class = 'is-slate';
@@ -194,7 +218,8 @@ $renderStatusBadge = static function (string $status): string {
 				<?php for ($day = 1; $day <= $daysInMonth; $day++) : ?>
 					<?php $date = sprintf('%04d-%02d-%02d', $year, $month, $day); ?>
 					<?php $entries = $this->monthlyBookings[$date] ?? []; ?>
-					<div class="mabooking-grid__cell<?php echo $date === $today ? ' is-today' : ''; ?>" role="button" tabindex="0" data-booking-date="<?php echo $date; ?>">
+					<?php $isTopHalf = ($startWeekday + $day - 1) < 14; ?>
+					<div class="mabooking-grid__cell<?php echo $date === $today ? ' is-today' : ''; ?><?php echo $entries ? ' has-bookings' : ''; ?>" role="button" tabindex="0" data-booking-date="<?php echo $date; ?>" data-has-bookings="<?php echo $entries ? '1' : '0'; ?>">
 						<div class="mabooking-grid__day"><?php echo $day; ?></div>
 						<?php foreach (array_slice($entries, 0, 3) as $booking) : ?>
 							<?php $roomColor = $roomColors[$booking->venue_title] ?? 'is-slate'; ?>
@@ -206,8 +231,42 @@ $renderStatusBadge = static function (string $status): string {
 								</div>
 							</div>
 						<?php endforeach; ?>
+						<?php if ($entries) : ?>
+							<div class="mabooking-calendar-popover <?php echo $isTopHalf ? 'is-below' : 'is-above'; ?>">
+								<div class="mabooking-calendar-popover__head">
+									<strong><?php echo htmlspecialchars((new DateTimeImmutable($date))->format('D, M j, Y'), ENT_QUOTES, 'UTF-8'); ?></strong>
+									<span><?php echo count($entries); ?> Booking<?php echo count($entries) === 1 ? '' : 's'; ?></span>
+								</div>
+								<div class="mabooking-calendar-popover__body">
+									<?php foreach ($entries as $booking) : ?>
+										<?php $roomColor = $roomColors[$booking->venue_title] ?? 'is-slate'; ?>
+										<article class="mabooking-calendar-popover__item">
+											<span class="mabooking-calendar-entry__dot <?php echo htmlspecialchars($roomColor, ENT_QUOTES, 'UTF-8'); ?>"></span>
+											<div>
+												<strong><?php echo htmlspecialchars($booking->venue_title, ENT_QUOTES, 'UTF-8'); ?></strong>
+												<span>Booked sections: <?php echo htmlspecialchars($booking->space_title, ENT_QUOTES, 'UTF-8'); ?></span>
+												<span>Client: <?php echo htmlspecialchars($booking->client_name, ENT_QUOTES, 'UTF-8'); ?></span>
+												<span>Time: <?php echo htmlspecialchars(substr($booking->start_time, 0, 5) . ' - ' . substr($booking->end_time, 0, 5), ENT_QUOTES, 'UTF-8'); ?></span>
+											</div>
+										</article>
+									<?php endforeach; ?>
+								</div>
+								<div class="mabooking-calendar-popover__foot">Click date for full details</div>
+							</div>
+						<?php endif; ?>
 					</div>
 				<?php endfor; ?>
+			</div>
+
+			<div class="mabooking-schedule" id="mabooking-schedule" hidden>
+				<div class="mabooking-schedule__head">
+					<div>
+						<p>Schedule Details</p>
+						<h3 id="mabooking-schedule-title">Selected Date</h3>
+					</div>
+					<button type="button" class="mabooking-schedule__close" id="mabooking-schedule-close" aria-label="Close schedule details">&times;</button>
+				</div>
+				<div class="mabooking-schedule__list" id="mabooking-schedule-list"></div>
 			</div>
 
 			<div class="mabooking-legend">
@@ -380,6 +439,96 @@ document.addEventListener('DOMContentLoaded', function () {
 	var tabs = document.querySelectorAll('.mabooking-tab');
 	var panels = document.querySelectorAll('.mabooking-pane');
 	var search = document.getElementById('mabooking-dashboard-search');
+	var bookingDetails = <?php echo json_encode($bookingDetails, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+	var schedulePanel = document.getElementById('mabooking-schedule');
+	var scheduleTitle = document.getElementById('mabooking-schedule-title');
+	var scheduleList = document.getElementById('mabooking-schedule-list');
+	var scheduleClose = document.getElementById('mabooking-schedule-close');
+
+	var escapeHtml = function (value) {
+		return String(value || '').replace(/[&<>"']/g, function (character) {
+			return {
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#039;'
+			}[character];
+		});
+	};
+
+	var formatDate = function (dateValue) {
+		var parts = String(dateValue).split('-');
+
+		if (parts.length !== 3) {
+			return dateValue;
+		}
+
+		var date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+
+		return date.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+	};
+
+	var statusClass = function (status) {
+		status = String(status || '').toLowerCase();
+
+		if (status === 'confirmed') {
+			return 'is-green';
+		}
+
+		if (status === 'pending') {
+			return 'is-amber';
+		}
+
+		if (status === 'cancelled') {
+			return 'is-red';
+		}
+
+		return 'is-slate';
+	};
+
+	var showScheduleDetails = function (date) {
+		var entries = bookingDetails[date] || [];
+
+		if (!schedulePanel || !scheduleTitle || !scheduleList || !entries.length) {
+			return;
+		}
+
+		document.querySelectorAll('.mabooking-grid__cell.is-selected').forEach(function (cell) {
+			cell.classList.remove('is-selected');
+		});
+
+		var selectedCell = document.querySelector('.mabooking-grid__cell[data-booking-date="' + date + '"]');
+
+		if (selectedCell) {
+			selectedCell.classList.add('is-selected');
+		}
+
+		scheduleTitle.textContent = 'Schedule for ' + formatDate(date);
+		scheduleList.innerHTML = entries.map(function (entry) {
+			var notes = entry.notes ? '<p><strong>Notes:</strong> ' + escapeHtml(entry.notes) + '</p>' : '';
+
+			return '<article class="mabooking-schedule-item">'
+				+ '<div class="mabooking-schedule-item__main">'
+				+ '<h4>' + escapeHtml(entry.event) + '</h4>'
+				+ '<p><strong>Venue:</strong> ' + escapeHtml(entry.venue) + '</p>'
+				+ '<p><strong>Room:</strong> ' + escapeHtml(entry.space) + '</p>'
+				+ '<p><strong>Time:</strong> ' + escapeHtml(entry.time) + '</p>'
+				+ '<p><strong>Attendees:</strong> ' + escapeHtml(entry.attendees) + '</p>'
+				+ notes
+				+ '</div>'
+				+ '<div class="mabooking-schedule-item__side">'
+				+ '<span class="mabooking-status ' + statusClass(entry.status) + '">' + escapeHtml(entry.status) + '</span>'
+				+ '<p><strong>Client:</strong> ' + escapeHtml(entry.client) + '</p>'
+				+ '<p>' + escapeHtml(entry.phone) + '</p>'
+				+ '<p>' + escapeHtml(entry.email) + '</p>'
+				+ '<a class="mabooking-row-link" href="' + escapeHtml(entry.editUrl) + '">Edit Booking</a>'
+				+ '</div>'
+				+ '</article>';
+		}).join('');
+		schedulePanel.hidden = false;
+		schedulePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+	};
 
 	tabs.forEach(function (tab) {
 		tab.addEventListener('click', function () {
@@ -401,14 +550,30 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.querySelectorAll('.mabooking-grid__cell[data-booking-date]').forEach(function (cell) {
 		cell.addEventListener('click', function () {
 			var date = cell.getAttribute('data-booking-date');
+
+			if (cell.getAttribute('data-has-bookings') === '1') {
+				showScheduleDetails(date);
+				return;
+			}
+
 			window.location.href = 'index.php?option=com_mabooking&task=booking.add&booking_date=' + date;
 		});
 		cell.addEventListener('keydown', function (e) {
-			if (e.key === 'Enter') {
+			if (e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
 				cell.click();
 			}
 		});
 	});
+
+	if (scheduleClose && schedulePanel) {
+		scheduleClose.addEventListener('click', function () {
+			schedulePanel.hidden = true;
+			document.querySelectorAll('.mabooking-grid__cell.is-selected').forEach(function (cell) {
+				cell.classList.remove('is-selected');
+			});
+		});
+	}
 
 	if (search) {
 		search.addEventListener('input', function () {
@@ -474,7 +639,9 @@ document.addEventListener('DOMContentLoaded', function () {
 .mabooking-grid-head { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); text-align: center; padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f9; }
 .mabooking-grid-head div { font-size: .75rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .08em; }
 .mabooking-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .75rem; padding: 1.5rem; background: #fff; }
-.mabooking-grid__cell { min-height: 7rem; border: 1px solid #f1f5f9; border-radius: .85rem; padding: .65rem; display: grid; align-content: start; gap: .4rem; cursor: pointer; }
+.mabooking-grid__cell { min-height: 7rem; border: 1px solid #f1f5f9; border-radius: .85rem; padding: .65rem; display: grid; align-content: start; gap: .4rem; cursor: pointer; position: relative; }
+.mabooking-grid__cell.has-bookings { transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.mabooking-grid__cell.has-bookings:hover, .mabooking-grid__cell.has-bookings.is-selected { border-color: #7a95b1; box-shadow: 0 12px 26px rgba(15, 23, 42, .12); transform: translateY(-1px); }
 .mabooking-grid__cell--blank { border-color: transparent; background: transparent; cursor: default; }
 .mabooking-grid__cell.is-today { background: #f8fafc; border-color: #9ca3af; box-shadow: inset 0 0 0 1px #d1d5db; }
 .mabooking-grid__day { font-size: .78rem; font-weight: 700; color: #4b5563; }
@@ -482,11 +649,34 @@ document.addEventListener('DOMContentLoaded', function () {
 .mabooking-calendar-entry strong, .mabooking-table__primary { display: block; color: #1c2834; font-weight: 700; }
 .mabooking-calendar-entry span, .mabooking-table__secondary { color: #6b7280; font-size: .74rem; }
 .mabooking-calendar-entry__dot { width: .55rem; height: .55rem; border-radius: 999px; margin-top: .22rem; flex: 0 0 auto; }
+.mabooking-calendar-popover { position: absolute; left: 50%; z-index: 60; width: 16rem; border: 1px solid #d9e2ec; border-radius: .85rem; background: #fff; box-shadow: 0 22px 44px rgba(15, 23, 42, .22); opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(4px); transition: opacity .16s ease, transform .16s ease; overflow: hidden; }
+.mabooking-grid__cell.has-bookings:hover .mabooking-calendar-popover,
+.mabooking-grid__cell.has-bookings:focus-within .mabooking-calendar-popover { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+.mabooking-calendar-popover.is-below { top: calc(100% + .65rem); }
+.mabooking-calendar-popover.is-above { bottom: calc(100% + .65rem); }
+.mabooking-calendar-popover__head { padding: .8rem .95rem; background: #64748b; color: #fff; display: grid; gap: .2rem; }
+.mabooking-calendar-popover__head strong { font-size: .86rem; }
+.mabooking-calendar-popover__head span { color: #e5e7eb; font-size: .72rem; }
+.mabooking-calendar-popover__body { max-height: 16rem; overflow-y: auto; background: #fff; }
+.mabooking-calendar-popover__item { display: flex; align-items: flex-start; gap: .55rem; padding: .9rem; border-bottom: 1px solid #edf2f7; }
+.mabooking-calendar-popover__item strong { display: block; color: #1c2834; font-size: .85rem; margin-bottom: .25rem; }
+.mabooking-calendar-popover__item span { display: block; color: #516275; font-size: .75rem; margin-top: .15rem; }
+.mabooking-calendar-popover__foot { padding: .6rem .75rem; background: #f8fafc; color: #64748b; font-size: .7rem; text-align: center; border-top: 1px solid #edf2f7; }
 .is-blue { background: #3b82f6; }
 .is-red { background: #ef4444; }
 .is-green { background: #22c55e; }
 .is-gold { background: #f59e0b; }
 .is-slate { background: #64748b; }
+.mabooking-schedule { border-top: 1px solid #f1f5f9; background: #fff; }
+.mabooking-schedule__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.5rem; background: #f8fafc; border-bottom: 1px solid #f1f5f9; }
+.mabooking-schedule__head p { margin: 0 0 .35rem; color: #6b7280; font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.mabooking-schedule__head h3 { margin: 0; font-size: 1.35rem; color: #1c2834; }
+.mabooking-schedule__close { width: 2rem; height: 2rem; border: 1px solid #e5e7eb; border-radius: .5rem; background: #fff; color: #1c2834; font-size: 1.3rem; line-height: 1; cursor: pointer; }
+.mabooking-schedule__list { display: grid; gap: .85rem; padding: 1.5rem; }
+.mabooking-schedule-item { display: grid; grid-template-columns: minmax(0, 1fr) minmax(13rem, .4fr); gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-left: 4px solid #7a95b1; border-radius: .9rem; background: #fff; }
+.mabooking-schedule-item h4 { margin: 0 0 .45rem; font-size: 1rem; color: #1c2834; }
+.mabooking-schedule-item p { margin: .2rem 0; color: #4b5563; font-size: .84rem; }
+.mabooking-schedule-item__side { display: grid; align-content: start; justify-items: start; gap: .35rem; }
 .mabooking-legend { padding: 1.5rem; border-top: 1px solid #f1f5f9; background: #f8fafc; }
 .mabooking-legend p { margin: 0 0 .75rem; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
 .mabooking-legend__items { display: flex; flex-wrap: wrap; gap: 2rem; font-size: .8rem; color: #4b5563; }
@@ -523,5 +713,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	.mabooking-admin__header, .mabooking-admin__controls, .mabooking-card__top { flex-direction: column; align-items: flex-start; }
 	.mabooking-shortcuts { grid-template-columns: 1fr; }
 	.mabooking-stats, .mabooking-grid, .mabooking-grid-head { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.mabooking-schedule-item { grid-template-columns: 1fr; }
 }
 </style>
